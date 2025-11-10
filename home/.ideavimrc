@@ -1,0 +1,29 @@
+let mapleader = " "
+set number
+set relativenumber
+set clipboard=unnamedplus
+set ignorecase
+
+nnoremap <leader>ic :set ignorecase!<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>vv :vsp<CR>
+nnoremap <leader>Q :qall<CR>
+
+call plug#begin('~/.ideaivim/plugged')
+Plug 'tpope/vim-surround'
+call plug#end()
+
+" Disable the original destructive 's' and 'S' behaviors
+" (s = delete-char + insert, S = replace whole line)
+nnoremap s <Nop>
+nnoremap S <Nop>
+xnoremap s <Nop>
+
+" Remap to vim-surround style operations
+" Normal-mode: s{motion}{char}  -> like ys{motion}{char}
+" Normal-line: S               -> surround whole line (yS)
+" Visual-mode: s               -> act like S (wrap selection)
+" Delete/change remain standard: ds, cs
+nnoremap s ys
+nnoremap S yS
+xnoremap s S
