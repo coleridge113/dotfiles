@@ -88,20 +88,83 @@ return {
         .. "/.local/bin:"
         .. vim.env.PATH
 
-      local servers = { "lua_ls" }
+      local servers = { "lua_ls", "jdtls", "kotlin_language_server" }
       require("mason-lspconfig").setup({ ensure_installed = servers })
 
-      -- setup builtin servers first
       for _, srv in ipairs(servers) do
-        local ok, lsp = pcall(require, "lspconfig." .. srv)
-        if ok then
-          lsp.setup({
-            settings = srv == "lua_ls" and {
-              Lua = { diagnostics = { globals = { "vim" } } },
-            } or nil,
+        if srv == "jdtls" then
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "java",
+            callback = function()
+              local root_dir = require("lspconfig.util").root_pattern(".git", "mvnw", "gradlew", "build.gradle", "pom.xml")(vim.fn.getcwd())
+              local workspace_dir = os.getenv("HOME") .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir or vim.fn.getcwd(), ":p:h:t")
+              vim.lsp.start({
+                name = "jdtls",
+                cmd = { "jdtls", "-data", workspace_dir },
+                root_dir = root_dir,
+              })
+            end,
+          })
+        elseif srv == "kotlin_language_server" then
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "kotlin",
+            callback = function()
+              local root_dir = require("lspconfig.util").root_pattern(
+                "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"
+              )(vim.fn.getcwd())
+              vim.lsp.start({
+                name = "kotlin_language_server",
+                cmd = { "kotlin-language-server" },
+                root_dir = root_dir,
+              })
+            end,
+          })
+        elseif srv == "lua_ls" then
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "lua",
+            callback = function()
+              local root_dir = require("lspconfig.util").root_pattern(".git")(vim.fn.getcwd())
+              vim.lsp.start({
+                name = "lua_ls",
+                cmd = { "lua-language-server" },
+                root_dir = root_dir,
+                settings = {
+                  Lua = { diagnostics = { globals = { "vim" } } },
+                },
+              })
+            end,
           })
         end
       end
+    end,
+  },
+
+  -- Completion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<Tab>"] = cmp.mapping.select_next_item(),
+          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        },
+      })
     end,
   },
 
