@@ -4,10 +4,10 @@ set relativenumber
 set clipboard=unnamedplus
 set ignorecase
 
-nnoremap <leader>ic :set ignorecase!<CR>
-nnoremap <leader>q :q<CR>
-nnoremap <leader>vv :vsp<CR>
-nnoremap <leader>Q :qall<CR>
+nnoremap <leader>ic <cmd>set ignorecase!<CR>
+nnoremap <leader>q <cmd>q<CR>
+nnoremap <leader>vv <cmd>vsp<CR>
+nnoremap <leader>Q <cmd>qall<CR>
 
 call plug#begin('~/.ideaivim/plugged')
 Plug 'tpope/vim-surround'
