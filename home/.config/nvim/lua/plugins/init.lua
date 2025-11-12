@@ -214,8 +214,9 @@ return {
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
         }),
         sources = {
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
+            { name = "supermaven" },
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
         },
       })
     end,
@@ -282,7 +283,9 @@ return {
     {
         "supermaven-inc/supermaven-nvim",
         config = function()
-            require("supermaven-nvim").setup({})
+            require("supermaven-nvim").setup({
+                disable_keymaps = true,
+            })
         end,
     },
 }
