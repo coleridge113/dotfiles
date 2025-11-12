@@ -263,4 +263,14 @@ return {
             })
         end,
     },
+    -- MiniMap
+    { 
+        'nvim-mini/mini.nvim', 
+        version = false,
+        config = function()
+            require('mini.map').setup()
+            vim.keymap.set('n', '<leader>m', function() require('mini.map').toggle() end, { desc = 'MiniMap: toggle' })
+            vim.api.nvim_create_autocmd({ 'BufWinEnter' }, { callback = function() require('mini.map').open() end })
+        end,
+    },
 }
