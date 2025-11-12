@@ -1,5 +1,4 @@
 return {
-
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
@@ -280,5 +279,11 @@ return {
                 -- Configuration here, or leave empty to use defaults
             })
         end
-    }
+    },
+    {
+        "terrortylor/nvim-comment",
+        config = function()
+            require("nvim_comment").setup()
+        end,
+    },
 }
