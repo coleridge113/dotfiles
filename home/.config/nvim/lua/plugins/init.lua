@@ -88,22 +88,8 @@ return {
         .. "/.local/bin:"
         .. vim.env.PATH
 
-<<<<<<< HEAD
-      local servers = { "lua_ls" }
-      require("mason-lspconfig").setup({ ensure_installed = servers })
-
-      -- setup builtin servers first
-      for _, srv in ipairs(servers) do
-        local ok, lsp = pcall(require, "lspconfig." .. srv)
-        if ok then
-          lsp.setup({
-            settings = srv == "lua_ls" and {
-              Lua = { diagnostics = { globals = { "vim" } } },
-            } or nil,
-=======
       local servers = { "lua_ls", "jdtls", "kotlin_language_server" }
       require("mason-lspconfig").setup({ ensure_installed = servers })
-
       for _, srv in ipairs(servers) do
         if srv == "jdtls" then
           vim.api.nvim_create_autocmd("FileType", {
@@ -146,15 +132,66 @@ return {
                 },
               })
             end,
->>>>>>> refs/remotes/origin/master
           })
         end
+        return false
       end
+
+      -- Autocmd for Java files (start jdtls if not already running for this root)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = function()
+          local root_dir = require("lspconfig.util").root_pattern(
+            "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "pom.xml", "mvnw", "gradlew", ".git"
+          )(vim.fn.expand("%:p"))
+          if not root_dir then return end
+          if not lsp_attached("jdtls", root_dir) then
+            local workspace_dir = os.getenv("HOME") .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
+            vim.lsp.start({
+              name = "jdtls",
+              cmd = { "jdtls", "-data", workspace_dir },
+              root_dir = root_dir,
+            })
+          end
+        end,
+      })
+
+      -- Autocmd for Kotlin files (start kotlin_language_server if not already running for this root)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "kotlin", "kotlin.kts" },
+        callback = function()
+          local root_dir = require("lspconfig.util").root_pattern(
+            "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"
+          )(vim.fn.expand("%:p"))
+          if not root_dir then return end
+          if not lsp_attached("kotlin_language_server", root_dir) then
+            vim.lsp.start({
+              name = "kotlin_language_server",
+              cmd = { "kotlin-language-server" },
+              root_dir = root_dir,
+            })
+          end
+        end,
+      })
+
+      -- Lua LSP (unchanged)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "lua",
+        callback = function()
+          local root_dir = require("lspconfig.util").root_pattern(".git")(vim.fn.getcwd())
+          vim.lsp.start({
+            name = "lua_ls",
+            cmd = { "lua-language-server" },
+            root_dir = root_dir,
+            settings = {
+              Lua = { diagnostics = { globals = { "vim" } } },
+            },
+          })
+        end,
+      })
     end,
   },
 
-<<<<<<< HEAD
-=======
   -- Completion
   {
     "hrsh7th/nvim-cmp",
@@ -184,7 +221,6 @@ return {
     end,
   },
 
->>>>>>> refs/remotes/origin/master
   -- lspconfig plugin entry (ensure available)
   { "neovim/nvim-lspconfig" },
 
@@ -242,4 +278,11 @@ return {
       vim.keymap.set("n", "<leader>o", "<cmd>Neotree focus<cr>", { desc = "Neo-tree: focus" })
     end,
   },
+    -- Super Maven
+    {
+        "supermaven-inc/supermaven-nvim",
+        config = function()
+            require("supermaven-nvim").setup({})
+        end,
+    },
 }

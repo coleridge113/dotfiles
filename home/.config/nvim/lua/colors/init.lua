@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-local active = "github"
-=======
 local active = "gruvbox"
->>>>>>> refs/remotes/origin/master
 
 local themes = {
     ["rose-pine"] = require("colors.themes.rose-pine"),
