@@ -254,18 +254,16 @@ return {
     -- Super Maven
     {
         "supermaven-inc/supermaven-nvim",
-        event = "InsertEnter",
         cmd = { "SupermavenUseFree" },
         config = function()
             require("supermaven-nvim").setup({
                 disable_keymaps = true,
-                log_level = "info",
             })
         end,
     },
     -- MiniMap
-    { 
-        'nvim-mini/mini.nvim', 
+    {
+        'nvim-mini/mini.nvim',
         version = false,
         config = function()
             require('mini.map').setup()
