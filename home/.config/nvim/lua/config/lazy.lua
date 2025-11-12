@@ -22,11 +22,19 @@ vim.keymap.set("n", "<leader>vs", "<cmd>vsp<CR>", { desc = "Split vertically" })
 vim.keymap.set("n", "<leader>ss", "<cmd>sp<CR>", { desc = "Split horizontally" })
 
 
--- Terminal shortcuts
+-- Terminal keymaps
 vim.keymap.set("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
 vim.keymap.set("n", "<leader>tv", ":rightbelow vsp|terminal<CR>", { desc = "Vertical split terminal" })
 vim.keymap.set("n", "<leader>ts", ":belowright sp|terminal<CR>", {desc = "Horizontal split terminal" })
 vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Initiate switch window" } )
+
+-- Map <Esc> in terminal mode
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true, buffer = true })
+  end,
+})
 
 -- Translate to unix when copy-pasting
 vim.api.nvim_create_autocmd({"BufRead"}, {
@@ -37,9 +45,6 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
     vim.cmd([[%s/\r//ge]])
   end,
 })
-
--- Map <Esc> in terminal mode
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true })
 
 -- Ignore case
 vim.opt.ignorecase = true
