@@ -57,7 +57,6 @@ vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Close page" })
 vim.keymap.set("n", "QQQ", "<cmd>qall<CR>", { desc = "Close all pages" })
 
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

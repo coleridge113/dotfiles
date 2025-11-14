@@ -286,4 +286,8 @@ return {
             require("nvim_comment").setup()
         end,
     },
+    -- Fugitive
+    {
+        "tpope/vim-fugitive"
+    },
 }
