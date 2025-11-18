@@ -295,4 +295,15 @@ return {
     {
         "tpope/vim-fugitive"
     },
+    -- Colorizer
+    {
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        config = function()
+            require("colorizer").setup({
+                css = true, -- enable all CSS features
+                mode = "background", -- set mode to background
+            })
+        end,
+    },
 }
