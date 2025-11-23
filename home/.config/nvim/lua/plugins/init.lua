@@ -306,4 +306,18 @@ return {
             })
         end,
     },
+    -- Autosave
+    {
+        "okuuva/auto-save.nvim",
+        config = function()
+            require("auto-save").setup({
+                enabled = true,
+                events = { "InsertLeave", "TextChanged" },
+                conditions = {
+                    exists = true,
+                    modifiable = true
+                }
+            })
+        end,
+    }
 }
