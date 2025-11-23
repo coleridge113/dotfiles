@@ -72,6 +72,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
+-- Autosave when leaving insert mode or after inactivity
+vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertLeave", "CursorHold", "CursorHoldI"}, {
+  command = "silent! wall"
+})
+
 -- Ignore case
 vim.opt.ignorecase = true
 vim.keymap.set("n", "<leader>ic", ":set ignorecase!<CR>", { desc = "Toggle ignore case" })
