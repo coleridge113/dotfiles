@@ -58,6 +58,12 @@ return {
                     path_display = { "smart" },
                     mappings = { i = { ["<esc>"] = require("telescope.actions").close } },
                 },
+                pickers = {
+                    find_files = {
+                        hidden = true,
+                        no_ignore = true,
+                    },
+                },
             })
             local map = vim.keymap.set
             map("n", "<leader>sf", "<cmd>Telescope find_files<cr>", { desc = "Telescope: find files" })
@@ -233,8 +239,12 @@ return {
                 enable_diagnostics = true,
                 filesystem = {
                     filtered_items = {
-                        hide_dotfiles = false,
-                        hide_gitignored = true,
+                        visible = true,        -- show filtered items, but with different style
+                        hide_dotfiles = false, -- do NOT hide dotfiles
+                        hide_gitignored = false,
+                        hide_hidden = false,   -- important on Linux
+                        hide_by_name = {},
+                        hide_by_pattern = {},
                     },
                     follow_current_file = { enabled = true },
                     hijack_netrw_behavior = "open_default",
