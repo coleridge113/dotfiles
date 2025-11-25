@@ -8,7 +8,7 @@ return {
                 ensure_installed = {
                     "lua", "vim", "vimdoc", "query",
                     "kotlin", "bash", "json", "yaml",
-                    "markdown", "markdown_inline",
+                    "markdown", "markdown_inline", "javascript"
                 },
                 highlight = { enable = true, additional_vim_regex_highlighting = false },
                 indent = { enable = true },
@@ -87,7 +87,7 @@ return {
             .. "/.local/bin:"
             .. vim.env.PATH
 
-            local servers = { "lua_ls", "jdtls", "kotlin_language_server" }
+            local servers = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" }
             require("mason-lspconfig").setup({ ensure_installed = servers })
 
             local function is_lsp_attached(server_name, root_dir)
@@ -148,6 +148,22 @@ return {
                 end,
             })
 
+            -- Autocmd for Typescript & javascript
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+                callback = function()
+                    local root = require("lspconfig.util").root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")(vim.fn.expand("%:p"))
+                    if not root then return end
+                    if not is_lsp_attached("tsserver", root) then
+                        vim.lsp.start({
+                            name = "tsserver",
+                            cmd = { "typescript-language-server", "--stdio" },
+                            root_dir = root,
+                            capabilities = capabilities,
+                        })
+                    end
+                end,
+            })
             -- Lua LSP
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "lua",
