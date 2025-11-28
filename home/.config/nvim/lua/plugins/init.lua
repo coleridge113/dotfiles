@@ -61,7 +61,7 @@ return {
                 pickers = {
                     find_files = {
                         hidden = true,
-                        no_ignore = true,
+                        no_ignore = false,
                     },
                 },
             })
@@ -242,7 +242,7 @@ return {
                         visible = true,        -- show filtered items, but with different style
                         hide_dotfiles = false, -- do NOT hide dotfiles
                         hide_gitignored = false,
-                        hide_hidden = false,   -- important on Linux
+                        hide_hidden = true,   -- important on Linux
                         hide_by_name = {},
                         hide_by_pattern = {},
                     },
