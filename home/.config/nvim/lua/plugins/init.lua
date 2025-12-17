@@ -145,7 +145,8 @@ return {
                             settings = {
                                 kotlin = {
                                     java = {
-                                        home = os.getenv("JAVA_HOME"),
+                                        -- home = os.getenv("JAVA_HOME"),
+                                        home = "/usr/lib/jvm/java-21-openjdk-amd64",
                                     },
                                 },
                             },
