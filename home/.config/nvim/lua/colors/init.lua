@@ -1,4 +1,4 @@
-local active = "gruvbox-light"
+local active = "gruvbox"
 
 local themes = {
     ["rose-pine"] = require("colors.themes.rose-pine"),
