@@ -33,39 +33,36 @@ local objects = {
     ["@namespace"] = { fg = c },
 }
 
-local placeholder = {}
 local overrides = vim.tbl_extend("force", functions, keywords, objects) 
 
 return {
-    {
-        "ellisonleao/gruvbox.nvim",
-        priority = 1000,
-        opts = {
-            terminal_colors = true,
-            undercurl = true,
-            underline = true,
-            bold = true,
-            italic = {
-                strings = false,
-                emphasis = false,
-                comments = false,
-                operators = false,
-                folds = false,
-            },
-            strikethrough = true,
-            invert_selection = false,
-            invert_signs = false,
-            invert_tabline = false,
-            inverse = true,
-            contrast = "",
-            palette_overrides = {},
-            dim_inactive = false,
-            transparent_mode = false,
-            overrides = overrides,
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000,
+    opts = {
+        terminal_colors = true,
+        undercurl = true,
+        underline = true,
+        bold = true,
+        italic = {
+            strings = false,
+            emphasis = false,
+            comments = true,
+            operators = false,
+            folds = false,
         },
-        config = function(_, opts)
-            require("gruvbox").setup(opts)
-            vim.cmd("colorscheme gruvbox")
-        end,
+        strikethrough = true,
+        invert_selection = false,
+        invert_signs = false,
+        invert_tabline = false,
+        inverse = true,
+        contrast = "",
+        palette_overrides = {},
+        dim_inactive = false,
+        transparent_mode = false,
+        overrides = overrides,
     },
+    config = function(_, opts)
+        require("gruvbox").setup(opts)
+        vim.cmd("colorscheme gruvbox")
+    end,
 }
