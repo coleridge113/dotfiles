@@ -18,4 +18,4 @@ export NVM_DIR="$HOME/.nvm"
 export STEAM="$HOME/snap/steam/common/.local/share/Steam/steamapps/common"
 
 # Dotfiles exports
-export DOT_HOME="$HOME/dotfiles/home"
+export DOT_HOME="$HOME/.dotfiles/home"

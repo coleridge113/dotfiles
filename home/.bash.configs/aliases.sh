@@ -15,7 +15,7 @@ alias svb='source ~/.bashrc'
 alias nvi='nvim ~/.ideavimrc'
 alias nvg='nvim ~/.config/ghostty/config'
 alias nvt='nvim ~/.tmux.conf'
-alias dot='cd ~/dotfiles'
+alias dot='cd ~/.dotfiles'
 
 # Git aliases
 alias gs='git status'
