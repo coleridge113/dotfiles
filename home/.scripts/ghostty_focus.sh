@@ -3,6 +3,15 @@
 # This script shows the desktop whenever ghostty is focused.
 # It minimizes other windows, requiring xdotool.
 
+# Check for dependencies
+for cmd in xdotool wmctrl xprop; do
+  if ! command -v "$cmd" &> /dev/null; then
+    echo "Error: Command '$cmd' is not installed." >&2
+    echo "Please install '$cmd' to use this script." >&2
+    exit 1
+  fi
+done
+
 GHOSTTY_WM_CLASS="com.mitchellh.ghostty"
 ghostty_was_active=0
 
@@ -21,7 +30,6 @@ while true; do
       ghostty_win_id=$active_win_id
 
       # Minimize all other normal windows to avoid flicker.
-      # This requires `xdotool` to be installed.
       for win_id in $(wmctrl -l | awk '{print $1}'); do
         # Compare window IDs as numbers to handle different hex formats (0x... vs 0x0...)
         if [ $((win_id)) -ne $((ghostty_win_id)) ]; then
