@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This script shows the desktop whenever ghostty is focused.
+# It minimizes other windows, requiring xdotool.
 
 GHOSTTY_WM_CLASS="com.mitchellh.ghostty"
 ghostty_was_active=0
@@ -19,11 +20,17 @@ while true; do
       # Store the active ghostty window ID
       ghostty_win_id=$active_win_id
 
-      # Toggle "Show Desktop" to minimize all windows
-      wmctrl -k on
-
-      # Re-activate the ghostty window, which brings it back from being minimized
-      wmctrl -i -a "$ghostty_win_id"
+      # Minimize all other normal windows to avoid flicker.
+      # This requires `xdotool` to be installed.
+      for win_id in $(wmctrl -l | awk '{print $1}'); do
+        # Compare window IDs as numbers to handle different hex formats (0x... vs 0x0...)
+        if [ $((win_id)) -ne $((ghostty_win_id)) ]; then
+          # Check if it is a normal window, to avoid minimizing panels, docks, etc.
+          if xprop -id "$win_id" _NET_WM_WINDOW_TYPE 2>/dev/null | grep -q "_NET_WM_WINDOW_TYPE_NORMAL"; then
+            xdotool windowminimize "$win_id" 2>/dev/null
+          fi
+        fi
+      done
     fi
     ghostty_was_active=1
   else
