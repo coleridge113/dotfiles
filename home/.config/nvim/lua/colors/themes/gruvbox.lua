@@ -10,30 +10,30 @@ local gc = {
     bg     = "#282828",
 }
 
-local c = gc.green
-local functions = {
-    ["@function"] = { fg = c },
-    ["@function.call"] = { fg = c },
-    ["@function.builtin"] = { fg = c },
-    Function = { fg = c },
-}
-
-local c = gc.purple
-local keywords = {
-    ["@keyword"] = { fg = c },
-    Keyword = { fg = c },
-}
-
-
-local c = gc.blue
-local objects = {
-    ["@type"] = { fg = c },
-    ["@type.builtin"] = { fg = c },
-    Type = { fg = c },
-    ["@namespace"] = { fg = c },
-}
-
-local overrides = vim.tbl_extend("force", functions, keywords, objects) 
+-- local c = gc.green
+-- local functions = {
+--     ["@function"] = { fg = c },
+--     ["@function.call"] = { fg = c },
+--     ["@function.builtin"] = { fg = c },
+--     Function = { fg = c },
+-- }
+--
+-- local c = gc.purple
+-- local keywords = {
+--     ["@keyword"] = { fg = c },
+--     Keyword = { fg = c },
+-- }
+--
+--
+-- local c = gc.blue
+-- local objects = {
+--     ["@type"] = { fg = c },
+--     ["@type.builtin"] = { fg = c },
+--     Type = { fg = c },
+--     ["@namespace"] = { fg = c },
+-- }
+--
+-- local overrides = vim.tbl_extend("force", functions, keywords, objects) 
 
 return {
     "ellisonleao/gruvbox.nvim",
@@ -55,11 +55,11 @@ return {
         invert_signs = false,
         invert_tabline = false,
         inverse = true,
-        contrast = "",
+        contrast = "hard",
         palette_overrides = {},
         dim_inactive = false,
         transparent_mode = false,
-        overrides = overrides,
+        overrides = {},
     },
     config = function(_, opts)
         require("gruvbox").setup(opts)
