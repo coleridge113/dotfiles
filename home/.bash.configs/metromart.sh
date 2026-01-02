@@ -1,7 +1,10 @@
 #!/bin/bash
 
 export METROMART="$HOME/dev/metromart"
+
 alias mm="cd $METROMART"
+
+# Projects
 alias cs="cd $METROMART/projects/android-cs-java"
 alias rs="cd $METROMART/projects/android-rs-java"
 alias rsk="cd $METROMART/projects/android-rs-kotlin"
@@ -9,7 +12,12 @@ alias loc="cd $METROMART/projects/location-tracking-poc"
 alias server="cd $METROMART/projects/server"
 alias emit="cd $METROMART/projects/location-emitter"
 alias maps="cd $METROMART/projects/demo-maps"
+alias cog="cd $METROMART/projects/aws-cognito-test"
+
+#DSM
 alias dsm="nvim $METROMART/docs/dsm-notes"
+
+# Gradle
 alias ad1="./gradlew clean assembleRs_stg_1_Debug"
 
 register_token() {
