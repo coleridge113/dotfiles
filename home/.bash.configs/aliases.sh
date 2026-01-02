@@ -13,7 +13,7 @@ alias nvn='nv && nvim .'
 alias nvb='nvim $DOT_HOME/.bash.configs'
 alias svb='source ~/.bashrc'
 alias nvi='nvim ~/.ideavimrc'
-alias nvg='nvim ~/.config/ghostty/config'
+alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'
 alias dot='cd ~/.dotfiles'
 
