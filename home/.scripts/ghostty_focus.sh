@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script shows the desktop whenever ghostty is focused.
-# It minimizes other windows, requiring xdotool.
+# It minimizes other windows on the current workspace, requiring xdotool.
 
 # Check for dependencies
 for cmd in xdotool wmctrl xprop; do
@@ -29,13 +29,19 @@ while true; do
       # Store the active ghostty window ID
       ghostty_win_id=$active_win_id
 
-      # Minimize all other normal windows to avoid flicker.
-      for win_id in $(wmctrl -l | awk '{print $1}'); do
-        # Compare window IDs as numbers to handle different hex formats (0x... vs 0x0...)
-        if [ $((win_id)) -ne $((ghostty_win_id)) ]; then
-          # Check if it is a normal window, to avoid minimizing panels, docks, etc.
-          if xprop -id "$win_id" _NET_WM_WINDOW_TYPE 2>/dev/null | grep -q "_NET_WM_WINDOW_TYPE_NORMAL"; then
-            xdotool windowminimize "$win_id" 2>/dev/null
+      # Get current workspace
+      current_ws=$(wmctrl -d | grep '*' | awk '{print $1}')
+
+      # Minimize all other normal windows on the current workspace to avoid flicker.
+      wmctrl -l | while read -r win_id win_ws _; do
+        # Process only windows on the current workspace (or sticky windows, ws=-1)
+        if [ "$win_ws" = "$current_ws" ] || [ "$win_ws" = "-1" ]; then
+          # Compare window IDs as numbers to handle different hex formats (0x... vs 0x0...)
+          if [ $((win_id)) -ne $((ghostty_win_id)) ]; then
+            # Check if it is a normal window, to avoid minimizing panels, docks, etc.
+            if xprop -id "$win_id" _NET_WM_WINDOW_TYPE 2>/dev/null | grep -q "_NET_WM_WINDOW_TYPE_NORMAL"; then
+              xdotool windowminimize "$win_id" 2>/dev/null
+            fi
           fi
         fi
       done
