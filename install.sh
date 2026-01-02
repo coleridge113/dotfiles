@@ -53,7 +53,7 @@ fi
 # Ghostty
 if [ -d "$DOT_HOME/.config/ghostty" ]; then
   mkdir -p "$HOME/.config"
-  ln -sfn "$DOT_HOME/.config/ghostty" "$HOME/.config/ghostty"
+  ln -sfn "$DOT_HOME/.config/ghostty" "$HOME/.config"
 else
   echo "error linking ghostty config"
 fi
