@@ -22,3 +22,7 @@ alias gs='git status'
 alias ga='git add .'
 alias gb='git branch'
 alias gp='git push -u origin HEAD'
+
+# Script aliases
+alias ghostty_focus='$DOT_HOME/.scripts/ghostty_focus.sh &'
+alias ghostty_focus_stop='$DOT_HOME/.scripts/stop_ghostty_focus.sh'

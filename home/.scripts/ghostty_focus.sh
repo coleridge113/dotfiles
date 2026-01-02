@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Save PID to a file for easy stopping
+PID_FILE="/tmp/ghostty_focus.pid"
+echo $$ > "$PID_FILE"
+trap "rm -f \"$PID_FILE\"" EXIT
+
 # This script shows the desktop whenever ghostty is focused.
 # It minimizes other windows on the current workspace, requiring xdotool.
 
