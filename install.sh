@@ -49,3 +49,11 @@ if [ -f "$DOT_HOME/.ideavimrc" ]; then
   ln -sfn "$DOT_HOME/.ideavimrc" "$HOME/.ideavimrc"
   echo "Linked .ideavimrc"
 fi
+
+# Ghostty
+if [ -d "$DOT_HOME/.config/ghostty" ]; then
+  mkdir -p "$HOME/.config"
+  ln -sfn "$DOT_HOME/.config/ghostty" "$HOME/.config/ghostty"
+else
+  echo "error linking ghostty config"
+fi
