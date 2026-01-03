@@ -83,9 +83,6 @@ return {
         config = function()
             -- Initialize Mason tools
             require("mason").setup()
-            require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" }
-            })
 
             local lspconfig = require("lspconfig")
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -115,13 +112,45 @@ return {
                             capabilities = capabilities,
                             on_attach = on_attach,
                             root_dir = lspconfig.util.root_pattern("settings.gradle", "settings.gradle.kts", ".git"),
-                            settings = {
-                                kotlin = {
-                                    java = { home = "/usr/lib/jvm/java-21-openjdk-amd64" },
-                                    compiler = { jvm = { target = "21" } }
-                                },
-                            },
+                            -- settings = {
+                            --     kotlin = {
+                            --         java = { home = "/usr/lib/jvm/java-21-openjdk-amd64" },
+                            --         compiler = { jvm = { target = "21" } }
+                            --     },
+                            -- },
                             flags = { debounce_text_changes = 150 }
+                        })
+                    end,
+
+                    -- Recommended handler for jdtls
+                    ['jdtls'] = function()
+                        -- Create a project-specific workspace directory
+                        local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+                        local workspace_dir = vim.fn.stdpath('data') .. '/jdtls-workspace/' .. project_name
+                        
+                        -- Use glob to find the jdtls jar and config paths installed by Mason
+                        local jdtls_jar = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar')
+                        local jdtls_config = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/packages/jdtls/config_*')
+
+                        lspconfig.jdtls.setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            cmd = {
+                                'java',
+                                '-Declipse.application=org.eclipse.jdt.ls.core.id1.XmlServerApplication',
+                                '-Dosgi.bundles.defaultStartLevel=4',
+                                '-Declipse.product=org.eclipse.jdt.ls.core.product',
+                                '-Dlog.protocol=true',
+                                '-Dlog.level=ALL',
+                                '-Xms1g',
+                                '--add-modules=ALL-SYSTEM',
+                                '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+                                '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+                                '-jar', jdtls_jar,
+                                '-configuration', jdtls_config,
+                                '-data', workspace_dir
+                            },
+                            root_dir = require('lspconfig').util.root_pattern('.git', 'mvnw', 'gradlew', 'pom.xml'),
                         })
                     end,
                 }
