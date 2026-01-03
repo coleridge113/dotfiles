@@ -29,3 +29,8 @@ function studio() {
 function clean_build() {
     ./gradlew clean assembleDebug
 }
+
+# Nvim functions
+function lsp_clean() {
+    rm -rf .gradle/ kls_database.db build/
+}
