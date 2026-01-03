@@ -72,126 +72,64 @@ return {
             map("n", "<leader>sh", "<cmd>Telescope help_tags<cr>", { desc = "Telescope: help tags" })
         end,
     },
-
-    -- LSP + Mason
+    -- LSP Config
     {
-        "williamboman/mason.nvim",
-        build = ":MasonUpdate",
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            { "williamboman/mason.nvim", build = ":MasonUpdate" },
+            "williamboman/mason-lspconfig.nvim",
+            "hrsh7th/cmp-nvim-lsp", -- Required for capabilities
+        },
         config = function()
+            -- Initialize Mason tools
             require("mason").setup()
-        end,
-    },
+            require("mason-lspconfig").setup({
+                ensure_installed = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" }
+            })
 
-    {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
-        config = function()
-            -- ensure Neovim can run mason shims
-            vim.env.PATH = os.getenv("HOME")
-            .. "/.local/share/nvim/mason/bin:"
-            .. os.getenv("HOME")
-            .. "/.local/bin:"
-            .. vim.env.PATH
-
-            local servers = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" }
-            require("mason-lspconfig").setup({ ensure_installed = servers })
-
-            local function is_lsp_attached(server_name, root_dir)
-                local clients = vim.lsp.get_clients({ bufnr = 0 })
-                for _, client in ipairs(clients) do
-                    if client.name == server_name and client.root_dir == root_dir then
-                        return true
-                    end
-                end
-                return false
-            end
-
+            local lspconfig = require("lspconfig")
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-            -- Autocmd for Java files (start jdtls if not already running for this root)
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "java",
-                callback = function()
-                    local root_dir = require("lspconfig.util").root_pattern(
-                        "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "pom.xml", "mvnw", "gradlew", ".git"
-                    )(vim.fn.expand("%:p"))
-                    if not root_dir then return end
-                    if not is_lsp_attached("jdtls", root_dir) then
-                        local workspace_dir = os.getenv("HOME") .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
-                        vim.lsp.start({
-                            name = "jdtls",
-                            cmd = { "jdtls", "-data", workspace_dir },
-                            root_dir = root_dir,
-                            capabilities = capabilities,
-                        })
-                    end
-                end,
-            })
+            local on_attach = function(client, bufnr)
+                -- You can add common LSP keybindings/autocmds here if needed
+                -- For example:
+                -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+                -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', { noremap=true, silent=true })
+                -- etc.
+            end
 
-            -- Autocmd for Kotlin files (start kotlin_language_server if not already running for this root)
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "kotlin", "kotlin.kts" },
-                callback = function()
-                    local root_dir = require("lspconfig.util").root_pattern(
-                        "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", ".git"
-                    )(vim.fn.expand("%:p"))
-                    if not root_dir then return end
-                    if not is_lsp_attached("kotlin_language_server", root_dir) then
-                        vim.lsp.start({
-                            name = "kotlin_language_server",
-                            cmd = { "kotlin-language-server" },
-                            root_dir = root_dir,
+            require("mason-lspconfig").setup({
+                ensure_installed = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" },
+                handlers = {
+                    -- Default handler for all servers not explicitly listed below
+                    function(server_name)
+                        lspconfig[server_name].setup({
                             capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end,
+
+                    -- Specific handler for Kotlin Language Server
+                    ['kotlin_language_server'] = function()
+                        lspconfig['kotlin_language_server'].setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            root_dir = lspconfig.util.root_pattern("settings.gradle", "settings.gradle.kts", ".git"),
                             settings = {
                                 kotlin = {
-                                    java = {
-                                        -- home = os.getenv("JAVA_HOME"),
-                                        home = "/usr/lib/jvm/java-21-openjdk-amd64",
-                                    },
+                                    java = { home = "/usr/lib/jvm/java-21-openjdk-amd64" },
+                                    compiler = { jvm = { target = "21" } }
                                 },
                             },
+                            flags = { debounce_text_changes = 150 }
                         })
-                    end
-                end,
+                    end,
+                }
             })
-
-            -- Autocmd for Typescript & javascript
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-                callback = function()
-                    local root = require("lspconfig.util").root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")(vim.fn.expand("%:p"))
-                    if not root then return end
-                    if not is_lsp_attached("tsserver", root) then
-                        vim.lsp.start({
-                            name = "tsserver",
-                            cmd = { "typescript-language-server", "--stdio" },
-                            root_dir = root,
-                            capabilities = capabilities,
-                        })
-                    end
-                end,
-            })
-            -- Lua LSP
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "lua",
-                callback = function()
-                    local root_dir = require("lspconfig.util").root_pattern(".git")(vim.fn.getcwd())
-                    if not root_dir then return end
-                    if not is_lsp_attached("lua_ls", root_dir) then
-                        vim.lsp.start({
-                            name = "lua_ls",
-                            cmd = { "lua-language-server" },
-                            root_dir = root_dir,
-                            capabilities = capabilities,
-                        })
-                    end
-                end,
-            })
-
         end,
     },
 
-    -- Completion
+    -- Auto complete
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
@@ -201,10 +139,12 @@ return {
         },
         config = function()
             local cmp = require("cmp")
+            local luasnip = require("luasnip")
+
             cmp.setup({
                 snippet = {
                     expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
+                        luasnip.lsp_expand(args.body)
                     end,
                 },
                 mapping = cmp.mapping.preset.insert({
@@ -212,18 +152,14 @@ return {
                     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
                     ["<CR>"] = cmp.mapping.confirm({ select = true }),
                 }),
-                sources = {
+                sources = cmp.config.sources({
                     { name = "supermaven" },
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
-                },
+                }),
             })
         end,
     },
-
-    -- lspconfig plugin entry (ensure available)
-    { "neovim/nvim-lspconfig" },
-
     -- Neo-Tree
     {
         "nvim-neo-tree/neo-tree.nvim",
