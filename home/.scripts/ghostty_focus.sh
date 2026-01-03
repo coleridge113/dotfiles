@@ -1,61 +1,68 @@
 #!/bin/bash
 
-# Save PID to a file for easy stopping
-PID_FILE="/tmp/ghostty_focus.pid"
-echo $$ > "$PID_FILE"
-trap "rm -f \"$PID_FILE\"" EXIT
+# This script adjusts the opacity of inactive windows when a ghostty window is
+# focused, creating a "focus mode". It is designed for the Hyprland compositor.
+#
+# Dependencies: hyprctl (comes with Hyprland), socat
 
-# This script shows the desktop whenever ghostty is focused.
-# It minimizes other windows on the current workspace, requiring xdotool.
+# --- Configuration ---
+GHOSTTY_WM_CLASS="com.mitchellh.ghostty"
+# Your default inactive opacity.
+# Most users have this at 1.0, but change if your config is different.
+DEFAULT_INACTIVE_OPACITY=1.0
+# The opacity of inactive windows when ghostty is focused.
+FOCUSED_INACTIVE_OPACITY=0.2
+# --- End Configuration ---
+
 
 # Check for dependencies
-for cmd in xdotool wmctrl xprop; do
-  if ! command -v "$cmd" &> /dev/null; then
-    echo "Error: Command '$cmd' is not installed." >&2
-    echo "Please install '$cmd' to use this script." >&2
-    exit 1
-  fi
-done
+if ! command -v socat &> /dev/null; then
+  echo "Error: Command 'socat' is not installed." >&2
+  echo "Please install 'socat' to use this script."
+  exit 1
+fi
+if ! command -v hyprctl &> /dev/null; then
+  echo "Error: Command 'hyprctl' is not installed or not in your PATH." >&2
+  echo "This script is designed for the Hyprland compositor."
+  exit 1
+fi
 
-GHOSTTY_WM_CLASS="com.mitchellh.ghostty"
-ghostty_was_active=0
 
-while true; do
-  # Get the ID of the active window
-  active_win_id=$(xprop -root _NET_ACTIVE_WINDOW | awk '{print $5}')
+# Save PID to a file for easy stopping
+PID_FILE="/tmp/ghostty_focus_wayland.pid"
+echo $$ > "$PID_FILE"
+trap "rm -f \"$PID_FILE\"; hyprctl keyword decoration:inactive_opacity $DEFAULT_INACTIVE_OPACITY; exit" EXIT SIGHUP SIGINT SIGTERM
 
-  # Get the class of the active window
-  # Redirect stderr to /dev/null to hide errors if the window disappears too quickly
-  active_win_class_info=$(xprop -id "$active_win_id" WM_CLASS 2>/dev/null)
+echo "Ghostty focus script started for Hyprland. PID: $$"
 
-  # Check if ghostty is the active window
-  if echo "$active_win_class_info" | grep -q "$GHOSTTY_WM_CLASS"; then
-    if [ $ghostty_was_active -eq 0 ]; then
-      # Store the active ghostty window ID
-      ghostty_win_id=$active_win_id
+# 0 = normal mode, 1 = ghostty focus mode
+focus_mode_active=0
 
-      # Get current workspace
-      current_ws=$(wmctrl -d | grep '*' | awk '{print $1}')
+# Subscribe to Hyprland's active window event stream using socat.
+# This is more efficient than a polling loop.
+socat -U - "UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while read -r event;
+do
+  # The event for a focused window looks like: "activewindow>>WINDOWCLASS,WINDOWTITLE"
+  if [[ $event == "activewindow>>"* ]]; then
+    # Extract the window class from the event string
+    active_class=$(echo "$event" | cut -d'>' -f3 | cut -d',' -f1)
 
-      # Minimize all other normal windows on the current workspace to avoid flicker.
-      wmctrl -l | while read -r win_id win_ws _; do
-        # Process only windows on the current workspace (or sticky windows, ws=-1)
-        if [ "$win_ws" = "$current_ws" ] || [ "$win_ws" = "-1" ]; then
-          # Compare window IDs as numbers to handle different hex formats (0x... vs 0x0...)
-          if [ $((win_id)) -ne $((ghostty_win_id)) ]; then
-            # Check if it is a normal window, to avoid minimizing panels, docks, etc.
-            if xprop -id "$win_id" _NET_WM_WINDOW_TYPE 2>/dev/null | grep -q "_NET_WM_WINDOW_TYPE_NORMAL"; then
-              xdotool windowminimize "$win_id" 2>/dev/null
-            fi
-          fi
-        fi
-      done
+    if [[ $active_class == "$GHOSTTY_WM_CLASS" ]]; then
+      # Ghostty window is now active.
+      # If focus mode is not already active, activate it.
+      if [ $focus_mode_active -eq 0 ]; then
+        echo "Ghostty focused, entering focus mode."
+        hyprctl keyword decoration:inactive_opacity "$FOCUSED_INACTIVE_OPACITY"
+        focus_mode_active=1
+      fi
+    else
+      # A non-ghostty window is now active.
+      # If focus mode was active, deactivate it.
+      if [ $focus_mode_active -eq 1 ]; then
+        echo "Ghostty unfocused, leaving focus mode."
+        hyprctl keyword decoration:inactive_opacity "$DEFAULT_INACTIVE_OPACITY"
+        focus_mode_active=0
+      fi
     fi
-    ghostty_was_active=1
-  else
-    ghostty_was_active=0
   fi
-
-  # Wait for a bit before checking again to avoid high CPU usage
-  sleep 0.5
 done

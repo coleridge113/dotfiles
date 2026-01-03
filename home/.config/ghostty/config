@@ -4,7 +4,7 @@ cursor-color = cell-foreground
 cursor-style = block
 
 # Opacity
-background-opacity = 0.95
+# background-opacity = 0.95
 
 # Window decoration: must be one of auto, client, server, none
 window-decoration = auto

@@ -1,3 +1,7 @@
+# System aliases
+# For GNOME
+alias logout='gnome-session-quit --logout --no-prompt'
+
 # App aliases
 alias chrome='setsid google-chrome > /dev/null 2>&1 &'
 alias goverlay='setsid goverlay > /dev/null 2>&1 &'
