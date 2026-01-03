@@ -263,8 +263,16 @@ return {
         version = false,
         config = function()
             require('mini.map').setup()
-            vim.keymap.set('n', '<leader>m', function() require('mini.map').toggle() end, { desc = 'MiniMap: toggle' })
-            vim.api.nvim_create_autocmd({ 'BufWinEnter' }, { callback = function() require('mini.map').open() end })
+            -- toggle manually with <leader>m
+            vim.keymap.set('n', '<leader>m', function()
+                require('mini.map').toggle()
+            end, { desc = 'MiniMap: toggle' })
+
+            -- remove the BufWinEnter autocmd so it doesn't auto-open
+            -- if you want to ensure it's closed on startup:
+            vim.api.nvim_create_autocmd('VimEnter', {
+                callback = function() require('mini.map').close() end
+            })
         end,
     },
     {
