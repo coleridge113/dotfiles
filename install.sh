@@ -30,6 +30,7 @@ if [ -f "$DOT_HOME/.tmux.conf" ]; then
   ln -sfn "$DOT_HOME/.tmux.conf" "$HOME/.tmux.conf"
   if [ -n "$TMUX" ]; then
     tmux source-file "$HOME/.tmux.conf"
+    echo "Linked tmux config"
   fi
 else
   echo "error sourcing .tmux.conf"
@@ -40,6 +41,7 @@ fi
 if [ -d "$DOT_HOME/.config/nvim" ]; then
   mkdir -p "$HOME/.config"
   ln -sfn "$DOT_HOME/.config/nvim" "$HOME/.config/nvim"
+  echo "Linked nvim config"
 else
   echo "error linking nvim config"
 fi
@@ -54,6 +56,13 @@ fi
 if [ -d "$DOT_HOME/.config/ghostty" ]; then
   mkdir -p "$HOME/.config"
   ln -sfn "$DOT_HOME/.config/ghostty" "$HOME/.config"
+  echo "Linked ghostty config"
 else
   echo "error linking ghostty config"
+fi
+
+# Btop
+if [ -f "$DOT_HOME/.config/btop.conf" ]; then
+  ln -sfn "$DOT_HOME/.config/btop.conf" "$HOME/.config/btop/"
+  echo "Linked btop.conf"
 fi
