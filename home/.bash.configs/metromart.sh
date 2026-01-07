@@ -64,4 +64,25 @@ status() {
 }
 alias status="status"
 
+function aws_track_history() {
+    aws location get-device-position-history \
+        --device-id "$1" \
+        --tracker-name MetromartDemoTracker 
+}
 
+function aws_track_delete() {
+    aws location batch-delete-device-position-history \
+        --tracker-name MetromartDemoTracker \
+        --device-ids "$1"
+}
+
+function aws_track_list() {
+    aws location list-device-positions \
+        --tracker-name MetromartDemoTracker \
+        --region ap-northeast-1
+}
+
+function ampx_sandbox() {
+    npx ampx sandbox --outputs-out-dir \
+        ../aws-cognito-test/app/src/main/res/raw
+}
