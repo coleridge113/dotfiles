@@ -27,6 +27,7 @@ return {
     -- Git
     {
         "lewis6991/gitsigns.nvim", config = function()
+            vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { italic = true, link = "Comment" })
             require("gitsigns").setup({
                 current_line_blame = true, -- inline blame for the current line
                 current_line_blame_opts = {
@@ -35,7 +36,7 @@ return {
                     virt_text_pos = "eol", -- eol | overlay | right_align
                     ignore_whitespace = false,
                 },
-                current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
+                current_line_blame_formatter = "    <author>, <author_time:%Y-%m-%d> - <summary>",
             })
             local gs = require("gitsigns")
             vim.keymap.set("n", "<leader>gb", gs.toggle_current_line_blame, { desc = "Git: toggle inline blame" })
