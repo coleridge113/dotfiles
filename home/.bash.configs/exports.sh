@@ -8,6 +8,7 @@ export BUDGET="$DEV/budget"
 
 # Android Studio exports
 export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+export ANDROID_SDK_HOME="$HOME/.config/"
 
 # Node exports
 export NVM_DIR="$HOME/.nvm"
