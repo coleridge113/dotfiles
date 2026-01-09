@@ -10,6 +10,7 @@ alias brave='setsid brave > /dev/null 2>&1 &'
 alias postman='setsid postman > /dev/null 2>&1 &'
 alias discord='setsid discord > /dev/null 2>&1 &'
 alias kdenlive='setsid kdenlive > /dev/null 2>&1 &'
+alias spotify='setsid spotify > /dev/null 2>&1 &'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
@@ -32,3 +33,7 @@ alias ghostty_focus='$DOT_HOME/.scripts/ghostty_focus.sh &'
 alias ghostty_focus_stop='$DOT_HOME/.scripts/stop_ghostty_focus.sh'
 alias aawts_refresh='~/scripts/aawts_refresh.sh &'
 alias aawts_toggle='~/scripts/aawts_toggle.sh &'
+
+# Hyprland
+alias nvh='nvim ~/.config/hypr'
+alias nvw='nvim ~/.config/waybar'

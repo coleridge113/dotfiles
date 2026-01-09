@@ -81,22 +81,3 @@ vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Close page" })
 vim.keymap.set("n", "QQQ", "<cmd>qall<CR>", { desc = "Close all pages" })
 
--- Background Opacity
-local augroup = vim.api.nvim_create_augroup("Transparency", { clear = true })
-vim.api.nvim_create_autocmd({"ColorScheme", "WinEnter", "WinLeave"}, {
-  group = augroup,
-  pattern = "*",
-  callback = function()
-    vim.cmd [[
-      highlight Normal guibg=none
-      highlight NormalNC guibg=none
-      highlight NonText guibg=none
-      highlight Normal ctermbg=none
-      highlight NormalNC ctermbg=none
-      highlight NonText ctermbg=none
-      highlight NeoTreeNormal guibg=none
-      highlight NeoTreeNormalNC guibg=none
-      highlight WinSeparator guibg=none
-    ]]
-  end,
-})
