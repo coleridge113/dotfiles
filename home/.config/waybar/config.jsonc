@@ -6,8 +6,7 @@
     "modules-right": ["network", "pulseaudio", "battery", "bluetooth", "clock"],
 
     "clock": {
-        // Using @mauve (#d3869b)
-        "format": "<span foreground='#d3869b'>  </span>{:%a %d %H:%M}",
+        "format": "<span foreground='#ea6962'>   </span>{:%a %d %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
