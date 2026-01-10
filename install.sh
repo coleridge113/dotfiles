@@ -66,3 +66,27 @@ if [ -f "$DOT_HOME/.config/btop.conf" ]; then
     ln -sfn "$DOT_HOME/.config/btop.conf" "$HOME/.config/btop/"
     echo "Linked btop.conf"
 fi
+
+# Hyprland
+if [ -d "$DOT_HOME/.config/hypr" ]; then
+    ln -sfn "$DOT_HOME/.config/hypr" "$HOME/.config/"
+    echo "Linked Hyprland"
+fi
+
+# Waybar
+if [ -d "$DOT_HOME/.config/waybar" ]; then
+    ln -sfn "$DOT_HOME/.config/waybar" "$HOME/.config/"
+    echo "Linked waybar"
+fi
+
+# Kitty
+if [ -d "$DOT_HOME/.config/kitty" ]; then
+    ln -sfn "$DOT_HOME/.config/kitty" "$HOME/.config/"
+    echo "Linked kitty"
+fi
+
+# Starship
+if [ -d "$DOT_HOME/.config/starship" ]; then
+    ln -sfn "$DOT_HOME/.config/starship/starship.toml" "$HOME/.config/"
+    echo "Linked starship"
+fi
