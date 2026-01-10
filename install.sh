@@ -90,3 +90,10 @@ if [ -d "$DOT_HOME/.config/starship" ]; then
     ln -sfn "$DOT_HOME/.config/starship/starship.toml" "$HOME/.config/"
     echo "Linked starship"
 fi
+
+# TMUX Plugin
+if [ -d "$DOT_HOME/.tmux/" ]; then
+    ln -sfn "$DOT_HOME/.tmux/" "$HOME/.tmux/"
+    echo "Linked tmux plugins"
+fi
+
