@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export METROMART="$HOME/dev/metromart"
+export AWS_DEMO="$METROMART/projects/aws-demo"
 
 alias mm="cd $METROMART"
 
@@ -11,8 +12,9 @@ alias rsk="cd $METROMART/projects/android-rs-kotlin"
 alias loc="cd $METROMART/projects/location-tracking-poc"
 alias server="cd $METROMART/projects/server"
 alias emit="cd $METROMART/projects/location-emitter"
-alias maps="cd $METROMART/projects/demo-maps"
-alias cog="cd $METROMART/projects/aws-cognito-test"
+alias maps="cd $AWS_DEMO/demo-maps"
+alias cog="cd $AWS_DEMO/aws-cognito-test"
+alias event="cd $AWS_DEMO/aws-demo-backend"
 
 #DSM
 alias dsm="nvim $METROMART/docs/dsm-notes"
