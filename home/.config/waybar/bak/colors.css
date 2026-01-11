@@ -1,0 +1,34 @@
+/* Gruvbox Material Dark Colors */
+@define-color rosewater #d3869b; /* Mapped to Purple */
+@define-color flamingo  #ea6962; /* Mapped to Red */
+@define-color pink      #d3869b; 
+@define-color mauve     #d3869b;
+@define-color red       #ea6962;
+@define-color maroon    #ea6962;
+@define-color peach     #e78a4e; /* Orange */
+@define-color yellow    #d8a657;
+@define-color green     #a9b665;
+@define-color teal      #89b482; /* Aqua/Cyan */
+@define-color sky       #7daea3; /* Blue */
+@define-color sapphire  #7daea3;
+@define-color blue      #7daea3;
+@define-color lavender  #d3869b;
+
+/* Typography & Backgrounds */
+@define-color text      #d4be98; /* Foreground */
+@define-color subtext1  #bdad80;
+@define-color subtext0  #a89984;
+
+/* Surface & Overlays */
+@define-color overlay2  #928374; /* Gray */
+@define-color overlay1  #7c6f64;
+@define-color overlay0  #665c54;
+
+@define-color surface2  #504945;
+@define-color surface1  #3c3836;
+@define-color surface0  #32302f; /* Background Alt */
+
+/* Base Backgrounds */
+@define-color base      #282828; /* Main Background */
+@define-color mantle    #1d2021;
+@define-color crust     #1b1b1b;

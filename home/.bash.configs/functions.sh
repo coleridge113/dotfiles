@@ -23,7 +23,19 @@ function gc() {
 
 # Android Studio functions
 function studio() {
-    setsid snap run android-studio "$@" >/dev/null 2>&1 &
+    if command -v snap >/dev/null 2>&1 && snap list android-studio >/dev/null 2>&1; then
+        # Ubuntu Snap
+        setsid snap run android-studio "$@" >/dev/null 2>&1 &
+    elif command -v android-studio >/dev/null 2>&1; then
+        # Arch package or AUR build
+        setsid android-studio "$@" >/dev/null 2>&1 &
+    elif command -v studio.sh >/dev/null 2>&1; then
+        # Manual install
+        setsid studio.sh "$@" >/dev/null 2>&1 &
+    else
+        echo "Android Studio not found."
+        return 1
+    fi
 }
 
 function clean_build() {

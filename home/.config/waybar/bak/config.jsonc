@@ -1,0 +1,55 @@
+{
+    "position": "top",
+    "output": "DP-1",
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": ["network", "pulseaudio", "battery", "bluetooth", "clock"],
+
+    "clock": {
+        "format": "<span foreground='#ea6962'>   </span>{:%a %d %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "battery": {
+        "states": { "warning": 30, "critical": 15 },
+        // Using @green (#a9b665)
+        "format": "<span size='13000' foreground='#a9b665'>{icon} </span> {capacity}%",
+        "format-warning": "<span size='13000' foreground='#d8a657'>{icon} </span> {capacity}%",
+        "format-critical": "<span size='13000' foreground='#ea6962'>{icon} </span> {capacity}%",
+        "format-charging": "<span size='13000' foreground='#a9b665'> </span>{capacity}%",
+        "format-plugged": "<span size='13000' foreground='#a9b665'> </span>{capacity}%",
+        "format-alt": "<span size='13000' foreground='#a9b665'>{icon} </span> {time}",
+        "format-full": "<span size='13000' foreground='#a9b665'> </span>{capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "{time}"
+    },
+
+    "network": {
+        "format-wifi": "<span size='13000' foreground='#d4be98'>  </span>{essid}",
+        "format-ethernet": "<span size='13000' foreground='#d4be98'>󰈀  </span>LAN",
+        "format-linked": "<span size='13000' foreground='#d4be98'>󰈀  </span>{ifname} (No IP)",
+        "format-disconnected": "<span size='13000' foreground='#ea6962'>󰤭  </span>Disconnected",
+        "tooltip-format-ethernet": "{ifname} via {gwaddr} 󰊗",
+        "tooltip-format-wifi": "Signal Strength: {signalStrength}%"
+    },
+
+    "pulseaudio": {
+        // Using @blue (#7daea3)
+        "format": "<span size='13000' foreground='#7daea3'>{icon} </span> {volume}%",
+        "format-muted": "<span size='13000' foreground='#ea6962'> </span> Muted",
+        "format-icons": {
+            "default": ["", "", " "]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "bluetooth": {
+        // Changed to Aqua (#89b482) to differentiate from Volume
+        "format": "<span size='13000' foreground='#89b482'> </span> {status}",
+        "format-disabled": "", 
+        "format-connected": "<span size='13000' foreground='#89b482'> </span> {num_connections}",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "on-click": "bluetoothctl connect <your_device_address>",
+        "on-click-right": "overskride"
+    }
+}
