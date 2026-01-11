@@ -97,3 +97,8 @@ if [ -d "$DOT_HOME/.tmux/" ]; then
     echo "Linked tmux plugins"
 fi
 
+# Wofi
+if [ -d "$DOT_HOME/.config/wofi" ]; then
+    ln -sfn "$DOT_HOME/.config/wofi" "$HOME/.config/"
+    echo "Linked tmux plugins"
+fi
