@@ -3,7 +3,7 @@
 * {
   border: none;
   border-radius: 8;
-  font-family: "JetbrainsMono Nerd Font";
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Brands", "Font Awesome 6 Free", "Font Awesome 5 Free", "Font Awesome", sans-serif;
   font-size: 16px;
   min-height: 20px;
 }
@@ -26,6 +26,30 @@ window#waybar.hidden {
   background: transparent;
 }
 
+#workspaces button:nth-child(4),
+#workspaces button:nth-child(5),
+#workspaces button:nth-child(6),
+#workspaces button:nth-child(7),
+#workspaces button:nth-child(8),
+#workspaces button:nth-child(9) {
+  margin-top: 6px;
+  margin-left: 12px;
+  margin-bottom: 0px;
+
+  /* shrink text/icon */
+  font-size: 14px;
+  font-weight: 500;
+
+  /* shrink button size */
+  min-width: 14px;
+  min-height: 14px;
+  padding: 2px;
+
+  border-radius: 10px;
+  background: @surface0; /* Gruvbox Material dark background */
+  transition: none;
+}
+
 #workspaces {
   margin-top: 6px;
   margin-left: 12px;
@@ -33,7 +57,7 @@ window#waybar.hidden {
   font-weight: 500;
   margin-bottom: 0px;
   border-radius: 10px;
-  background: #282828;
+  background: @surface0;
   /* default: background: #161320; */
   transition: none;
 }
@@ -47,15 +71,15 @@ window#waybar.hidden {
 }
 
 #workspaces button.active {
-  color: @peach;
+  color: @orange;
 }
 
 #workspaces button:hover {
   transition: none;
   box-shadow: inherit;
   text-shadow: inherit;
-  color: @peach;
-  border-color: @peach;
+  color: @orange;
+  border-color: @orange;
   /* border-color: #e8a2af; */
   /* color: #e8a2af; */
 }
@@ -69,7 +93,7 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: #161320;
-  background: #fb4934;
+  background: @red;
   /*default: background: #bd93f9;*/
 }
 
@@ -135,8 +159,8 @@ window#waybar.hidden {
   margin-bottom: 0px;
   border-radius: 10px;
   transition: none;
-  color: @crust;
-  background: @teal;
+  color: @orange;
+  background: @surface0;
   /*default: background: #abe9b3; */
 }
 
@@ -162,7 +186,7 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: #161320;
-  background: #b8bb26;
+  background: @green;
   /*default: background: #96cdfb; */
 }
 
@@ -174,9 +198,9 @@ window#waybar.hidden {
   padding-right: 5px;
   border-radius: 10px;
   transition: none;
-  color: #fe8019;
+  color: @orange;
   /*default: color: #89dceb; */
-  background: #161320;
+  background: @surface0;
 }
 
 #custom-media {
@@ -188,5 +212,5 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: #161320;
-  background: #f2cdcd;
+  background: @orange;
 }

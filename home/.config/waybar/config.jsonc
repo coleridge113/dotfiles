@@ -1,8 +1,9 @@
 {
     "layer": "top",
-    "modules-left": ["custom/launcher", "backlight", "wireplumber"],
-    "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["network", "cpu", "memory", "battery", "clock"],
+    "output": "DP-1",
+    "modules-left": ["custom/launcher", "wireplumber", "custom/media", "hyprland/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["network", "cpu", "memory", "battery"],
 
     "wireplumber": {
         "tooltip": false,
@@ -20,7 +21,7 @@
         "tooltip": false,
         "format-wifi": "  {essid}",
         "format-ethernet": "",
-        "on-click":"kitty -- nmtui",
+        "on-click":"kitty -- nmtui"
     },
 
 
@@ -70,17 +71,17 @@
 
 
     "custom/media": {
-        "interval": 30,
-        "format": "{icon} {}",
+        "interval": 5,
         "return-type": "json",
-        "max-length": 20,
+        "format": "{icon} {text}",   // icon first, then text
+        "exec": "playerctl metadata --format '{\"text\":\" {{artist}} - {{title}}\",\"icon\":\"\"}' 2>/dev/null",
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
         "format-icons": {
-            "spotify": " ",
-            "default": " "
-        },
-        "escape": true,
-        "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
-        "on-click": "playerctl play-pause"
+            "spotify": "",
+            "default": ""
+        }
     },
 
 
