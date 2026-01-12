@@ -333,11 +333,11 @@ return {
             })
         vim.cmd.highlight('IndentLine guifg=#404040')  -- Add this line here
         end,
-    },   
+    },
     -- Markdown Render
     {
         'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+        -- dependencies = { 'nvim-treesitter/nvim-treesitter' },
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         config = function()
