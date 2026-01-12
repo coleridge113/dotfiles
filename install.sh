@@ -93,7 +93,7 @@ fi
 
 # TMUX Plugin
 if [ -d "$DOT_HOME/.tmux/" ]; then
-    ln -sfn "$DOT_HOME/.tmux/" "$HOME/.tmux/"
+    ln -sfn "$DOT_HOME/.tmux" "$HOME/"
     echo "Linked tmux plugins"
 fi
 
