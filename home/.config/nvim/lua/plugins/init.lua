@@ -339,16 +339,101 @@ return {
         end,
     },   
     -- Markdown Render
-    -- {
-    --     'MeanderingProgrammer/render-markdown.nvim',
-    --     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
-    --     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
-    --     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    --     ---@module 'render-markdown'
-    --     ---@type render.md.UserConfig
-    --     opts = {},
-    --     require('render-markdown').setup({
-    --         completions = { lsp = { enabled = true } },
-    --     })
-    -- },
+    {
+        'MeanderingProgrammer/render-markdown.nvim',
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        config = function()
+            require('render-markdown').setup({
+                completions = { lsp = { enabled = true } },
+                render_modes = true,
+                code = {
+                    enabled = true,
+                    render_modes = false,
+                    sign = false,
+                    conceal_delimiters = true,
+                    language = true,
+                    position = 'left',
+                    language_icon = true,
+                    language_name = true,
+                    language_info = true,
+                    language_pad = 0,
+                    disable_background = { 'diff' },
+                    width = 'full',
+                    left_margin = 0,
+                    left_pad = 0,
+                    right_pad = 0,
+                    min_width = 0,
+                    border = 'hide',
+                    language_border = '█',
+                    language_left = '',
+                    language_right = '',
+                    above = '▄',
+                    below = '▀',
+                    inline = true,
+                    inline_left = '',
+                    inline_right = '',
+                    inline_pad = 0,
+                    priority = 140,
+                    highlight = 'RenderMarkdownCode',
+                    highlight_info = 'RenderMarkdownCodeInfo',
+                    highlight_language = nil,
+                    highlight_border = 'RenderMarkdownCodeBorder',
+                    highlight_fallback = 'RenderMarkdownCodeFallback',
+                    highlight_inline = 'RenderMarkdownCodeInline',
+                    style = 'full',
+                },
+                sign = {
+                    enabled = false,
+                    highlight = 'RenderMarkdownSign',
+                },
+                link = {
+                    enabled = true,
+                    conceal = true,
+                    render_modes = false,
+                    footnote = {
+                        enabled = true,
+                        icon = '󰯔 ',
+                        superscript = true,
+                        prefix = '',
+                        suffix = '',
+                    },
+                    image = '󰥶 ',
+                    email = '󰀓 ',
+                    hyperlink = '󰌹 ',
+                    highlight = 'RenderMarkdownLink',
+                    highlight_title = 'RenderMarkdownLinkTitle',
+                    wiki = {
+                        icon = '󱗖 ',
+                        body = function()
+                            return nil
+                        end,
+                        highlight = 'RenderMarkdownWikiLink',
+                        scope_highlight = nil,
+                    },
+                    custom = {
+                        web = { pattern = '^http', icon = '󰖟 ' },
+                        apple = { pattern = 'apple%.com', icon = ' ' },
+                        discord = { pattern = 'discord%.com', icon = '󰙯 ' },
+                        github = { pattern = 'github%.com', icon = '󰊤 ' },
+                        gitlab = { pattern = 'gitlab%.com', icon = '󰮠 ' },
+                        google = { pattern = 'google%.com', icon = '󰊭 ' },
+                        hackernews = { pattern = 'ycombinator%.com', icon = ' ' },
+                        linkedin = { pattern = 'linkedin%.com', icon = '󰌻 ' },
+                        microsoft = { pattern = 'microsoft%.com', icon = ' ' },
+                        neovim = { pattern = 'neovim%.io', icon = ' ' },
+                        reddit = { pattern = 'reddit%.com', icon = '󰑍 ' },
+                        slack = { pattern = 'slack%.com', icon = '󰒱 ' },
+                        stackoverflow = { pattern = 'stackoverflow%.com', icon = '󰓌 ' },
+                        steam = { pattern = 'steampowered%.com', icon = ' ' },
+                        twitter = { pattern = 'x%.com', icon = ' ' },
+                        wikipedia = { pattern = 'wikipedia%.org', icon = '󰖬 ' },
+                        youtube = { pattern = 'youtube[^.]*%.com', icon = '󰗃 ' },
+                        youtube_short = { pattern = 'youtu%.be', icon = '󰗃 ' },
+                    },
+                },
+            })
+        end,
+    },
 }
