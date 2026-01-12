@@ -3,7 +3,7 @@
     "output": "DP-1",
     "modules-left": ["custom/launcher", "wireplumber", "custom/media", "hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["bluetooth", "network","cpu", "memory"],
+    "modules-right": ["network","cpu", "memory", "bluetooth"],
 
     "wireplumber": {
         "tooltip": false,

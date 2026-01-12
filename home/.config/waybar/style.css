@@ -164,7 +164,6 @@ window#waybar.hidden {
     /*default: background: #abe9b3; */
 }
 
-/* Right-most widget */
 #memory {
     margin-top: 6px;
     margin-left: 8px;
@@ -176,8 +175,6 @@ window#waybar.hidden {
     color: #161320;
     background: @yellow;
     /*default: background: #ddb6f2; */
-
-    margin-right: 18px;
 }
 
 #cpu {
@@ -220,6 +217,7 @@ window#waybar.hidden {
     background: @orange;
 }
 
+/* Right-most widget */
 #bluetooth {
     margin-top: 6px;
     margin-left: 8px;
@@ -230,4 +228,6 @@ window#waybar.hidden {
     transition: none;
     color: #161320;
     background: @blue;
+
+    margin-right: 18px;
 }
