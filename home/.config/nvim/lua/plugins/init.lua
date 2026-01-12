@@ -200,6 +200,10 @@ return {
             "MunifTanjim/nui.nvim",
         },
         config = function()
+            vim.api.nvim_set_hl(0, "NeoTreeNormal", { link = "Normal" })
+            vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { link = "NormalNC" })
+            vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { link = "Normal" })
+
             require("neo-tree").setup({
                 close_if_last_window = true,
                 enable_git_status = true,
