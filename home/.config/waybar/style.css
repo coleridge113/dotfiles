@@ -164,6 +164,7 @@ window#waybar.hidden {
     /*default: background: #abe9b3; */
 }
 
+/* Right-most widget */
 #memory {
     margin-top: 6px;
     margin-left: 8px;
@@ -175,6 +176,8 @@ window#waybar.hidden {
     color: #161320;
     background: @yellow;
     /*default: background: #ddb6f2; */
+
+    margin-right: 18px;
 }
 
 #cpu {
@@ -190,10 +193,10 @@ window#waybar.hidden {
     /*default: background: #96cdfb; */
 }
 
+/* Left-most widget */
 #custom-launcher {
     font-size: 24px;
     margin-top: 6px;
-    margin-left: 8px;
     padding-left: 10px;
     padding-right: 5px;
     border-radius: 10px;
@@ -201,6 +204,8 @@ window#waybar.hidden {
     color: @orange;
     /*default: color: #89dceb; */
     background: @surface0;
+    
+    margin-left: 18px;
 }
 
 #custom-media {

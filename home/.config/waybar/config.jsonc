@@ -20,10 +20,9 @@
         "tooltip": true,
         "interval": 10,
         "format-wifi": "  {essid}",
-        "format-ethernet": "↓ {bandwidthTotalBytes}",
+        "format-ethernet": "↑↓ {bandwidthTotalBytes}",
         "on-click":"kitty -- nmtui"
     },
-
 
     "backlight": {
         "tooltip": false,
@@ -32,7 +31,6 @@
         "on-scroll-up": "light -A 5",
         "on-scroll-down": "light -U 5"
     },
-
 
     "battery": {
         "states": {
@@ -48,7 +46,6 @@
         "format-icons": ["", "", "", "", ""]
     },
 
-
     "clock": {
         "interval": 60,
         "format": "{:%H:%M - %A, %B %d}",
@@ -62,13 +59,11 @@
         "on-click":"kitty -- btop"
     },
 
-
     "memory": {
         "interval": 30,
         "format": "  {}%",
         "max-length": 10
     },
-
 
     "custom/media": {
         "interval": 5,
@@ -84,13 +79,11 @@
         }
     },
 
-
     "custom/launcher":{
         "format": " ",
         "on-click": "sh ~/.config/rofi/launchers/type-2/launcher.sh",
         "on-click-right": "killall rofi"
     },
-
 
     "hyprland/workspaces": {
         "on-click": "activate",
@@ -103,5 +96,5 @@
         "format-connected-battery": " {device_battery_percentage}%",
         "tooltip-format": "{device_alias}\t{device_battery_percentage}%",
         "on-click": "overskride",
-    },
+    }
 }
