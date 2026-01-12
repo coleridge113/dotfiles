@@ -4,23 +4,19 @@ return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.config").setup({
+            local configs = require("nvim-treesitter.config")
+
+            configs.setup({
                 ensure_installed = {
                     "lua", "vim", "vimdoc", "query",
                     "kotlin", "bash", "json", "yaml",
                     "markdown", "markdown_inline", "javascript"
                 },
-                highlight = { enable = true, additional_vim_regex_highlighting = false },
-                indent = { enable = true },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection = "gnn",
-                        node_incremental = "grn",
-                        scope_incremental = "grc",
-                        node_decremental = "grm",
-                    },
+                highlight = { 
+                    enable = true, 
+                    additional_vim_regex_highlighting = false 
                 },
+                indent = { enable = true },
             })
         end,
     },
