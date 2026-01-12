@@ -342,11 +342,10 @@ return {
             'echasnovski/mini.nvim'
         },
         config = function()
-            require('render-markdown').setup( {
+            require('render-markdown').setup({
                 completions = { lsp = { enabled = true }},
                 render_modes = true,
-            }
-        )
-    end
-},
+            })
+        end
+    },
 }
