@@ -4,7 +4,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.config").setup({
+            require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     "lua", "vim", "vimdoc", "query",
                     "kotlin", "bash", "json", "yaml",
@@ -321,4 +321,17 @@ return {
             })
         end,
     },
+    -- Indent
+    {
+        'https://github.com/nvimdev/indentmini.nvim',
+        event = { 'BufReadPre', 'BufNewFile' },
+        config = function()
+            require('indentmini').setup({
+                char = '▏',
+                exclude = { 'markdown', 'help', 'text', 'rst' },
+                minlevel = 2,
+            })
+        vim.cmd.highlight('IndentLine guifg=#404040')  -- Add this line here
+        end,
+    },   
 }
