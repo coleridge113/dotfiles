@@ -100,5 +100,11 @@ fi
 # Wofi
 if [ -d "$DOT_HOME/.config/wofi" ]; then
     ln -sfn "$DOT_HOME/.config/wofi" "$HOME/.config/"
-    echo "Linked tmux plugins"
+    echo "Linked wofi"
+fi
+
+# Zathura
+if [ -d "$DOT_HOME/.config/zathura" ]; then
+    ln -sfn "$DOT_HOME/.config/zathura" "$HOME/.config/"
+    echo "Linked zathura"
 fi

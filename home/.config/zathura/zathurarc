@@ -1,0 +1,10 @@
+set selection-clipboard clipboard
+set backend poppler
+
+# Vim-like mappings
+map j scroll down
+map k scroll up
+map gg goto top
+map G goto bottom
+map v enter-mode-visual
+map y copy-selection

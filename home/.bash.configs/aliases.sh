@@ -11,6 +11,7 @@ alias postman='setsid postman > /dev/null 2>&1 &'
 alias discord='setsid discord > /dev/null 2>&1 &'
 alias kdenlive='setsid kdenlive > /dev/null 2>&1 &'
 alias spotify='setsid spotify > /dev/null 2>&1 &'
+alias pdf='zathura'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
@@ -37,3 +38,6 @@ alias aawts_toggle='~/scripts/aawts_toggle.sh &'
 # Hyprland
 alias nvh='nvim ~/.config/hypr'
 alias nvw='nvim ~/.config/waybar'
+
+# Navigation aliases
+alias books='cd ~/Documents/books'

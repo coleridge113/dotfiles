@@ -16,6 +16,10 @@ function idea() {
     setsid idea "$@" >/dev/null 2>&1 &
 }
 
+function zathura() {
+    setsid zathura "$@" >/dev/null 2>&1 &
+}
+
 # Git functions
 function gc() {
     git commit -m "$1"
