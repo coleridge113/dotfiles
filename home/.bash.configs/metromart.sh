@@ -15,6 +15,7 @@ alias emit="cd $METROMART/projects/location-emitter"
 alias maps="cd $AWS_DEMO/demo-maps"
 alias cog="cd $AWS_DEMO/aws-cognito-test"
 alias event="cd $AWS_DEMO/aws-demo-backend"
+alias demo="cd $AWS_DEMO"
 
 #DSM
 alias dsm="nvim $METROMART/docs/dsm-notes"
@@ -81,7 +82,7 @@ function aws_track_delete() {
 function aws_track_list() {
     aws location list-device-positions \
         --tracker-name MetromartDemoTracker \
-        --region ap-northeast-1
+        --region ap-southeast-1
 }
 
 function ampx_sandbox() {
