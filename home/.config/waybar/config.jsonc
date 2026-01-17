@@ -1,4 +1,5 @@
 {
+    "name": "primary-waybar",
     "layer": "top",
     "output": "DP-1",
     "modules-left": ["custom/launcher", "wireplumber", "custom/media", "hyprland/workspaces"],
@@ -70,6 +71,7 @@
         "return-type": "json",
         "format": "{icon} {text}",   // icon first, then text
         "exec": "playerctl metadata --format '{\"text\":\" {{title}} - {{artist}}\",\"icon\":\"\"}' 2>/dev/null",
+        "max-length": 30,
         "on-click": "playerctl play-pause",
         "on-scroll-up": "playerctl next",
         "on-scroll-down": "playerctl previous",

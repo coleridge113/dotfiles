@@ -1,0 +1,60 @@
+@import "colors.css";
+
+#window {
+    border-radius: 10px;
+    transition: none;
+    color: transparent;
+    background: transparent;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+#waybar.secondary-bar #workspaces button {
+    padding: 0px 5px;
+    /* margin: 4px 2px; */
+    color: #ebdbb2; /* Your light color from the image */
+    background: transparent;
+    border-radius: 50%;
+    min-width: 10px;
+    transition: all 0.3s ease;
+}
+
+/* The "Active" pill/dot */
+#waybar.secondary-bar #workspaces button.active {
+    color: @orange;      /* The orange color from your image */
+    background: rgba(255, 255, 255, 0.1); /* Optional subtle background */
+    border-radius: 10px; /* Makes it a "pill" if the width is wider */
+}
+
+/* Hide the workspace numbers if you just want icons */
+#waybar.secondary-bar #workspaces button label {
+    font-size: 14px;
+}
+
+#workspaces {
+    margin-left: 18px;
+    background: @surface0;
+    border-radius: 10px;
+}
+
+#workspaces button {
+    transition: none;
+    color: #fbf1c7;
+    /* default: color: #b5e8e0; */
+    background: transparent;
+    border-radius: 2px;
+}
+
+#workspaces button.active {
+    color: @orange;
+}
+
+#workspaces button:hover {
+    transition: none;
+    box-shadow: inherit;
+    text-shadow: inherit;
+    color: @orange;
+    border-color: @orange;
+}
