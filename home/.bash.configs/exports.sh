@@ -5,6 +5,8 @@ export PATH=$JAVA_HOME/bin:$PATH
 # Project exports
 export DEV="$HOME/dev/personal"
 export BUDGET="$DEV/budget"
+export CHAL="$HOME/dev/personal/challenges"
+export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 
 # Android Studio exports
 export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
