@@ -33,8 +33,6 @@ alias gp='git push -u origin HEAD'
 # Script aliases
 alias ghostty_focus='$DOT_HOME/.scripts/ghostty_focus.sh &'
 alias ghostty_focus_stop='$DOT_HOME/.scripts/stop_ghostty_focus.sh'
-alias aawts_refresh='~/scripts/aawts_refresh.sh &'
-alias aawts_toggle='~/scripts/aawts_toggle.sh &'
 
 # Hyprland
 alias nvh='nvim ~/.config/hypr'
@@ -42,3 +40,4 @@ alias nvw='nvim ~/.config/waybar'
 
 # Navigation aliases
 alias books='cd ~/Documents/books'
+alias notes='cd $NOTES'
