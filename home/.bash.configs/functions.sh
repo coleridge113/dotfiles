@@ -48,5 +48,5 @@ function clean_build() {
 
 # Nvim functions
 function lsp_clean() {
-    rm -rf .gradle/ kls_database.db build/
+    rm -rf .gradle/ kls_database.db build/ .kotlin/ app/build/
 }
