@@ -21,7 +21,8 @@ alias demo="cd $AWS_DEMO"
 alias dsm="nvim $METROMART/docs/dsm-notes"
 
 # Gradle
-alias ad1="./gradlew clean assembleRs_stg_1_Debug"
+alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
+alias build_cs1="./gradlew clean assembleCs_stg_1_Debug"
 
 register_token() {
     TYPE="$1"

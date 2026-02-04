@@ -345,6 +345,14 @@ return {
             require('render-markdown').setup({
                 completions = { lsp = { enabled = true }},
                 render_modes = true,
+                heading = {
+                    width = 'block',
+                    min_width = 30,
+                },
+                code = {
+                    width = 'block',
+                    min_width = 45,
+                },
             })
         end
     },
