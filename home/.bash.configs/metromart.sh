@@ -18,13 +18,14 @@ alias event="cd $AWS_DEMO/aws-demo-backend"
 alias demo="cd $AWS_DEMO"
 
 #DSM
-alias dsm="nvim $METROMART/docs/dsm-notes"
+alias dsm="nvim $NOTES/metromart/dsm-notes.md"
 
 # Gradle
 alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
 alias build_cs1="./gradlew clean assembleCs_stg_1_Debug"
+alias build_cs0="./gradlew clean assembleCs_stg_Debug"
 
-register_token() {
+function register_token() {
     TYPE="$1"
     TOKEN="$2"
 
@@ -37,7 +38,7 @@ register_token() {
 }
 alias rt="register_token"
 
-cancel_jo() {
+function cancel_jo() {
     JOB_ORDER="$1"
 
     RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
