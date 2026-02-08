@@ -13,6 +13,7 @@ alias kdenlive='setsid kdenlive > /dev/null 2>&1 &'
 alias spotify='setsid spotify > /dev/null 2>&1 &'
 alias pdf='zathura'
 alias steam='setsid steam > /dev/null 2>&1 &'
+alias viber='setsid viber > /dev/null 2>&1 &'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
