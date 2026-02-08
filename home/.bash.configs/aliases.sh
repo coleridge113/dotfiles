@@ -32,8 +32,7 @@ alias gp='git push -u origin HEAD'
 alias lg='lazygit'
 
 # Script aliases
-alias ghostty_focus='$DOT_HOME/.scripts/ghostty_focus.sh &'
-alias ghostty_focus_stop='$DOT_HOME/.scripts/stop_ghostty_focus.sh'
+alias leet_login='$DOT_SCRIPTS/leet_login.sh'
 
 # Hyprland
 alias nvh='nvim ~/.config/hypr'

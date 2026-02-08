@@ -23,6 +23,7 @@ export STEAM="$HOME/snap/steam/common/.local/share/Steam/steamapps/common"
 # Dotfiles exports
 export DOTFILES="$HOME/.dotfiles"
 export DOT_HOME="$DOTFILES/home"
+export DOT_SCRIPTS="$DOT_HOME/.scripts"
 
 # Other exports
 export NOTES="$HOME/dev/notes"
