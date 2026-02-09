@@ -13,19 +13,18 @@ function leet_login() {
     local BODY="csrftoken=$TOKEN; LEETCODE_SESSION=$SESSION"  
 
     # Detect clipboard and copy
-    if [[ "$XDG_SESSION_TYPE" == "wayland" ]] || [[ -n "$WAYLAND_DISPLAY" ]]; then
-        if command -v wl-copy &> /dev/null; then
-            echo -n "$BODY" | wl-copy
-            echo "Copied to Wayland clipboard."
-        else
-            echo "Error: wl-copy not found."
-        fi
+    if command -v wl-copy &> /dev/null; then
+        echo -n "$BODY" | wl-copy
+        echo "Copied to Wayland clipboard (wl-copy)."
+
     elif command -v xclip &> /dev/null; then
         echo -n "$BODY" | xclip -selection clipboard
         echo "Copied to X11 clipboard (xclip)."
+
     elif command -v xsel &> /dev/null; then
         echo -n "$BODY" | xsel --clipboard --input
         echo "Copied to X11 clipboard (xsel)."
+
     else
         echo "Error: No clipboard manager found. String is:"
         echo "$BODY"
