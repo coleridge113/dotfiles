@@ -24,6 +24,7 @@ alias nvi='nvim ~/.ideavimrc'
 alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'
 alias dot='cd ~/.dotfiles'
+alias leet='nvim leetcode.nvim'
 
 # Git aliases
 alias gs='git status'

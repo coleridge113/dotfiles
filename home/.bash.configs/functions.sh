@@ -33,9 +33,9 @@ function studio() {
     elif command -v android-studio >/dev/null 2>&1; then
         # Arch package or AUR build
         setsid android-studio "$@" >/dev/null 2>&1 &
-    elif command -v studio.sh >/dev/null 2>&1; then
+    elif command -v studio >/dev/null 2>&1; then
         # Manual install
-        setsid studio.sh "$@" >/dev/null 2>&1 &
+        setsid studio "$@" >/dev/null 2>&1 &
     else
         echo "Android Studio not found."
         return 1
