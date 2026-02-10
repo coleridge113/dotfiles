@@ -11,6 +11,7 @@ export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 # Android Studio exports
 export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
 export ANDROID_SDK_HOME="$HOME/.config/"
+export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
 
 # Node exports
 export NVM_DIR="$HOME/.nvm"
