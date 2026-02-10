@@ -5,6 +5,28 @@ function naut() {
     setsid nautilus "$@" > /dev/null 2>&1 &
 }
 
+function timer() {
+    local MINUTES="$1"
+
+    [[ "$MINUTES" =~ ^[0-9]+$ ]] || {
+        echo "Usage: timer <minutes>"
+        return 1
+    }
+
+    local END_TIME
+    END_TIME=$(date -d "+$MINUTES minutes" +"%H:%M")
+
+    (
+        set +m   # disable job control in this subshell
+        nohup bash -c "
+            sleep $((MINUTES * 60))
+            notify-send '⏱  Timer finished' '$MINUTES minute(s) have passed'
+        " >/dev/null 2>&1 &
+    )
+
+    echo "⏱  Timer set for $MINUTES minute(s) — ends at $END_TIME"
+}
+
 # App functions
 function spotify() {
     setsid spotify > /dev/null 2>&1 &
