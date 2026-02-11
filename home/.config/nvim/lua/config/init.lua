@@ -79,5 +79,9 @@ vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true })
 
 -- Remap quit
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Close page" })
-vim.keymap.set("n", "QQQ", "<cmd>qall<CR>", { desc = "Close all pages" })
+vim.keymap.set("n", "<leader>Q", "<cmd>qall<CR>", { desc = "Close all pages" })
 
+-- Diagnostics
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show diagnostics" })
+vim.keymap.set("n", "gn", vim.diagnostic.goto_next, { desc = "Go to next error" })
+vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, { desc = "Go to previous error" })
