@@ -1,6 +1,7 @@
 # Java exports
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 # export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
 export PATH=$JAVA_HOME/bin:$PATH
 export PATH=$(echo "$PATH" | tr ':' '\n' | awk '!seen[$0]++' | paste -sd:)
 
