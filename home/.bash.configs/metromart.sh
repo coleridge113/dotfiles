@@ -23,7 +23,7 @@ alias dsm="nvim $NOTES/metromart/dsm-notes.md"
 # Gradle
 alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
 alias build_cs1="./gradlew clean assembleCs_stg_1_Debug"
-alias build_cs0="./gradlew clean assembleCs_stg_Debug"
+alias build_cs="./gradlew clean assembleCs_stg_Debug"
 
 function register_token() {
     TYPE="$1"
