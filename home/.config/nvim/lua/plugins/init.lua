@@ -398,21 +398,26 @@ return {
         },
         event = "BufReadPost",
         config = function()
-            -- Recommended fold settings
-            vim.o.foldcolumn = "1"
-            vim.o.foldlevel = 99
-            vim.o.foldlevelstart = 99
-            vim.o.foldenable = true
+            vim.opt.foldcolumn = "0"
+            vim.opt.foldlevel = 99
+            vim.opt.foldlevelstart = 99
+            vim.opt.foldenable = true
 
             require("ufo").setup({
                 provider_selector = function(bufnr, filetype, buftype)
+                    if filetype == "neo-tree" then
+                        return nil
+                    end
                     return { "treesitter", "indent" }
                 end,
             })
 
-            -- Keymaps
-            vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-            vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "neo-tree",
+                callback = function()
+                    vim.opt_local.foldenable = false
+                end,
+            })
         end,
     }
 }
