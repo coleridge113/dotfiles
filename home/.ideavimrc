@@ -38,3 +38,6 @@ xnoremap s S
 " Tabbing
 nnoremap <C-h> :tabprevious<CR>
 nnoremap <C-l> :tabnext<CR>
+
+" Toggle breakpoint
+nnoremap <leader>b :action ToggleLineBreakpoint<CR>
