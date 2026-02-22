@@ -398,26 +398,26 @@ return {
         },
         event = "BufReadPost",
         config = function()
-            vim.opt.foldcolumn = "0"
-            vim.opt.foldlevel = 99
-            vim.opt.foldlevelstart = 99
-            vim.opt.foldenable = true
+            -- These MUST be set for UFO to work
+            vim.o.foldcolumn = '0'
+            vim.o.foldlevel = 99
+            vim.o.foldlevelstart = 99
+            vim.o.foldenable = true
+            -- Force manual so UFO can manage folds itself
+            vim.o.foldmethod = 'manual' 
 
             require("ufo").setup({
                 provider_selector = function(bufnr, filetype, buftype)
-                    if filetype == "neo-tree" then
-                        return nil
-                    end
+                    -- If you want specific overrides, keep them, 
+                    -- otherwise treesitter is usually enough.
                     return { "treesitter", "indent" }
                 end,
             })
 
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "neo-tree",
-                callback = function()
-                    vim.opt_local.foldenable = false
-                end,
-            })
+            -- UFO doesn't provide default keybindings for folding everything
+            -- These are the recommended ones to add:
+            vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+            vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
         end,
     }
 }
