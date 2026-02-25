@@ -23,6 +23,8 @@ alias dsm="nvim $NOTES/metromart/dsm-notes.md"
 # Templates
 alias csqa="nvim $METROMART/templates/cs-qa.md"
 alias cspr="nvim $METROMART/templates/cs-pr.md"
+alias rsqa="nvim $METROMART/templates/rs-qa.md"
+alias rspr="nvim $METROMART/templates/rs-pr.md"
 
 # Gradle
 alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
