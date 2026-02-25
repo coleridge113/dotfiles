@@ -17,8 +17,12 @@ alias cog="cd $AWS_DEMO/aws-cognito-test"
 alias event="cd $AWS_DEMO/aws-demo-backend"
 alias demo="cd $AWS_DEMO"
 
-#DSM
+# DSM
 alias dsm="nvim $NOTES/metromart/dsm-notes.md"
+
+# Templates
+alias csqa="nvim $METROMART/templates/cs-qa.md"
+alias cspr="nvim $METROMART/templates/cs-pr.md"
 
 # Gradle
 alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
