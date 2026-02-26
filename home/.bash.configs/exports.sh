@@ -31,3 +31,7 @@ export DOT_SCRIPTS="$DOT_HOME/.scripts"
 
 # Other exports
 export NOTES="$HOME/dev/notes"
+
+# Yazi exports
+export EDITOR=nvim
+export VISUAL=nvim
