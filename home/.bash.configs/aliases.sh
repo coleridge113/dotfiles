@@ -16,6 +16,9 @@ alias steam='setsid steam > /dev/null 2>&1 &'
 alias viber='setsid viber > /dev/null 2>&1 &'
 alias cam='setsid guvcview > /dev/null 2>&1 &'
 
+# TUI aliases
+alias tt='taskwarrior-tui'
+
 # Vim aliases
 alias nv='cd ~/.config/nvim'
 alias nvn='nv && nvim .'
