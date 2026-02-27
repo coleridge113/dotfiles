@@ -108,3 +108,10 @@ if [ -d "$DOT_HOME/.config/zathura" ]; then
     ln -sfn "$DOT_HOME/.config/zathura" "$HOME/.config/"
     echo "Linked zathura"
 fi
+
+# Yazi
+if [ -d "$DOT_HOME/.config/yazi" ]; then
+    ln -sfn "$DOT_HOME/.config/yazi" "$HOME/.config/"
+    echo "Linked yazi"
+fi
+
