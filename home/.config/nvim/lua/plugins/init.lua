@@ -115,7 +115,12 @@ return {
                             --         compiler = { jvm = { target = "21" } }
                             --     },
                             -- },
-                            flags = { debounce_text_changes = 150 }
+                            flags = { debounce_text_changes = 150 },
+                            kotlin = {
+                                excludeFolders = {
+                                    "build", ".gradle", ".idea"
+                                }
+                            }
                         })
                     end,
 
