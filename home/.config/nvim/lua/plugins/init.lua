@@ -451,17 +451,25 @@ return {
 
         config = function()
             local harpoon = require("harpoon")
-            harpoon:setup()
+
+            harpoon:setup({
+                settings = {
+                    save_on_toggle = true,
+                    save_on_change = true,
+                    sync_on_ui_close = true,
+                    mark_branch = true,
+                },
+            })
 
             local map = vim.keymap.set
 
             map("n", "<leader>a", function()
                 harpoon:list():add()
-            end, { desc = "Harpoon add file" })
+            end, { desc = "Harpoon: add file" })
 
             map("n", "<leader>h", function()
                 harpoon.ui:toggle_quick_menu(harpoon:list())
-            end, { desc = "Harpoon menu" })
+            end, { desc = "Harpoon: menu" })
 
             map("n", "<leader>1", function() harpoon:list():select(1) end)
             map("n", "<leader>2", function() harpoon:list():select(2) end)
