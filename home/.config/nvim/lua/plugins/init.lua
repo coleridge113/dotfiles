@@ -318,11 +318,29 @@ return {
         config = function()
             require("auto-save").setup({
                 enabled = true,
-                events = { "InsertLeave", "TextChanged" },
+                events = { "InsertLeave" },
+
                 conditions = {
                     exists = true,
-                    modifiable = true
-                }
+                    modifiable = true,
+                },
+
+                condition = function(buf)
+                    local filetype = vim.bo[buf].filetype
+                    local name = vim.api.nvim_buf_get_name(buf)
+
+                    -- don't autosave harpoon buffers
+                    if filetype == "harpoon" then
+                        return false
+                    end
+
+                    -- don't autosave plugin configs
+                    if name:match("/lua/plugins/") then
+                        return false
+                    end
+
+                    return true
+                end,
             })
         end,
     },
@@ -425,4 +443,30 @@ return {
             vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
         end,
     },
+    -- Harpoon
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" },
+
+        config = function()
+            local harpoon = require("harpoon")
+            harpoon:setup()
+
+            local map = vim.keymap.set
+
+            map("n", "<leader>a", function()
+                harpoon:list():add()
+            end, { desc = "Harpoon add file" })
+
+            map("n", "<leader>h", function()
+                harpoon.ui:toggle_quick_menu(harpoon:list())
+            end, { desc = "Harpoon menu" })
+
+            map("n", "<leader>1", function() harpoon:list():select(1) end)
+            map("n", "<leader>2", function() harpoon:list():select(2) end)
+            map("n", "<leader>3", function() harpoon:list():select(3) end)
+            map("n", "<leader>4", function() harpoon:list():select(4) end)
+        end,
+    }
 }
