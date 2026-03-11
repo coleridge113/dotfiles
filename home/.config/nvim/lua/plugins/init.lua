@@ -75,91 +75,90 @@ return {
         dependencies = {
             { "williamboman/mason.nvim", build = ":MasonUpdate" },
             "williamboman/mason-lspconfig.nvim",
-            "hrsh7th/cmp-nvim-lsp", -- Required for capabilities
+            "hrsh7th/cmp-nvim-lsp",
         },
+
         config = function()
-            -- Initialize Mason tools
             require("mason").setup()
-
-            local lspconfig = require("lspconfig")
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-            local on_attach = function(client, bufnr)
-                -- You can add common LSP keybindings/autocmds here if needed
-                -- For example:
-                -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-                -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', { noremap=true, silent=true })
-                -- etc.
-            end
 
             require("mason-lspconfig").setup({
                 ensure_installed = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" },
-                handlers = {
-                    -- Default handler for all servers not explicitly listed below
-                    function(server_name)
-                        lspconfig[server_name].setup({
-                            capabilities = capabilities,
-                            on_attach = on_attach,
-                        })
-                    end,
-
-                    -- Specific handler for Kotlin Language Server
-                    ['kotlin_language_server'] = function()
-                        lspconfig['kotlin_language_server'].setup({
-                            capabilities = capabilities,
-                            on_attach = on_attach,
-                            root_dir = lspconfig.util.root_pattern("settings.gradle", "settings.gradle.kts", ".git"),
-                            -- settings = {
-                            --     kotlin = {
-                            --         java = { home = "/usr/lib/jvm/java-21-openjdk-amd64" },
-                            --         compiler = { jvm = { target = "21" } }
-                            --     },
-                            -- },
-                            flags = { debounce_text_changes = 150 },
-                            kotlin = {
-                                excludeFolders = {
-                                    "build", ".gradle", ".idea"
-                                }
-                            }
-                        })
-                    end,
-
-                    -- Recommended handler for jdtls
-                    ['jdtls'] = function()
-                        -- Create a project-specific workspace directory
-                        local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-                        local workspace_dir = vim.fn.stdpath('data') .. '/jdtls-workspace/' .. project_name
-                        
-                        -- Use glob to find the jdtls jar and config paths installed by Mason
-                        local jdtls_jar = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar')
-                        local jdtls_config = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/packages/jdtls/config_*')
-
-                        lspconfig.jdtls.setup({
-                            capabilities = capabilities,
-                            on_attach = on_attach,
-                            cmd = {
-                                '/usr/lib/jvm/java-21-openjdk-amd64/bin/java',
-                                '-Declipse.application=org.eclipse.jdt.ls.core.id1.XmlServerApplication',
-                                '-Dosgi.bundles.defaultStartLevel=4',
-                                '-Declipse.product=org.eclipse.jdt.ls.core.product',
-                                '-Dlog.protocol=true',
-                                '-Dlog.level=ALL',
-                                '-Xms1g',
-                                '--add-modules=ALL-SYSTEM',
-                                '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-                                '--add-opens', 'java.base/java.io=ALL-UNNAMED',
-                                '-jar', jdtls_jar,
-                                '-configuration', jdtls_config,
-                                '-data', workspace_dir
-                            },
-                            root_dir = require('lspconfig').util.root_pattern('.git', 'mvnw', 'gradlew', 'pom.xml'),
-                        })
-                    end,
-                }
             })
+
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+            local on_attach = function(client, bufnr)
+                client.server_capabilities.semanticTokensProvider = nil
+            end
+
+            ------------------------------------------------
+            -- Lua
+            ------------------------------------------------
+            vim.lsp.config("lua_ls", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+            vim.lsp.enable("lua_ls")
+
+            ------------------------------------------------
+            -- TypeScript
+            ------------------------------------------------
+            vim.lsp.config("ts_ls", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+            vim.lsp.enable("ts_ls")
+
+            ------------------------------------------------
+            -- Kotlin
+            ------------------------------------------------
+            vim.lsp.config("kotlin_language_server", {
+                cmd = { "kotlin-language-server" },
+
+                cmd_env = {
+                    JAVA_TOOL_OPTIONS = "-Xms4G -Xmx12G -XX:+UseG1GC"
+                },
+
+                root_dir = vim.fs.root(0, {
+                    "settings.gradle",
+                    "settings.gradle.kts",
+                }),
+
+                init_options = {
+                    storagePath = vim.fn.stdpath("cache") .. "/kotlin-language-server",
+                    indexLibraries = false,
+                    enableScriptDependencies = true
+                },
+
+                settings = {
+                    kotlin = {
+                        excludeFolders = {
+                            ".git",
+                            ".idea",
+                            ".gradle",
+                            "**/.gradle",
+                            "build",
+                            "**/build",
+                            "**/generated",
+                            "**/intermediates",
+                            "**/.cxx",
+                            "**/tmp"
+                        }
+                    }
+                },
+            })
+
+            vim.lsp.enable("kotlin_language_server")
+            ------------------------------------------------
+            -- JDTLS
+            ------------------------------------------------
+            vim.lsp.config("jdtls", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+            vim.lsp.enable("jdtls")
         end,
     },
-
     -- Auto complete
     {
         "hrsh7th/nvim-cmp",
@@ -443,7 +442,6 @@ return {
             vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
         end,
     },
-    -- Harpoon
     {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
@@ -451,25 +449,21 @@ return {
 
         config = function()
             local harpoon = require("harpoon")
+            local map = vim.keymap.set
 
             harpoon:setup({
                 settings = {
-                    save_on_toggle = true,
-                    save_on_change = true,
-                    sync_on_ui_close = true,
-                    mark_branch = true,
+                    sync_on_ui_close = false,
                 },
             })
 
-            local map = vim.keymap.set
-
             map("n", "<leader>a", function()
                 harpoon:list():add()
-            end, { desc = "Harpoon: add file" })
+            end)
 
             map("n", "<leader>h", function()
                 harpoon.ui:toggle_quick_menu(harpoon:list())
-            end, { desc = "Harpoon: menu" })
+            end)
 
             map("n", "<leader>1", function() harpoon:list():select(1) end)
             map("n", "<leader>2", function() harpoon:list():select(2) end)
