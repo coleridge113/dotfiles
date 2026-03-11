@@ -27,9 +27,19 @@ alias rsqa="nvim $METROMART/templates/rs-qa.md"
 alias rspr="nvim $METROMART/templates/rs-pr.md"
 
 # Gradle
-alias build_rs1="./gradlew clean assembleRs_stg_1_Debug"
-alias build_cs1="./gradlew clean assembleCs_stg_1_Debug"
-alias build_cs="./gradlew clean assembleCs_stg_Debug"
+alias build_cs='gradle_build_notify assembleCs_stg_Debug'
+alias build_rs1='gradle_build_notify assembleRs_stg_1_Debug'
+alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
+
+function gradle_build_notify () {
+  local task=$1
+
+  if ./gradlew clean "$task"; then
+    notify-send "Build Success" "$task finished"
+  else
+    notify-send -u critical "Build Failed" "$task failed"
+  fi
+}
 
 function register_token() {
     TYPE="$1"
