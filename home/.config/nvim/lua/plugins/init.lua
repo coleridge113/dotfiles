@@ -116,7 +116,7 @@ return {
                 cmd = { "kotlin-language-server" },
 
                 cmd_env = {
-                    JAVA_TOOL_OPTIONS = "-Xms4G -Xmx12G -XX:+UseG1GC"
+                    JAVA_TOOL_OPTIONS = "-Xmx12G -XX:+UseG1GC"
                 },
 
                 root_dir = vim.fs.root(0, {
