@@ -63,7 +63,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, { desc = "LSP: type definition" })
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "LSP: rename" })
         vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, { desc = "LSP: code action" })
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = "LSP: go to references" })
+        vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references)
         vim.keymap.set('n', '<leader>f', function()
             vim.lsp.buf.format { async = true }
         end, { desc = "LSP: format" })
@@ -85,3 +85,6 @@ vim.keymap.set("n", "<leader>Q", "<cmd>qall<CR>", { desc = "Close all pages" })
 vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show diagnostics" })
 vim.keymap.set("n", "gn", vim.diagnostic.goto_next, { desc = "Go to next error" })
 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, { desc = "Go to previous error" })
+
+-- Copy filename
+vim.keymap.set("n", "<leader>fn", function() local name = vim.fn.expand("%:t:r") vim.fn.setreg("+", name) vim.notify("Copied: " .. name) end)
