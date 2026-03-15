@@ -88,3 +88,6 @@ vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, { desc = "Go to previous err
 
 -- Copy filename
 vim.keymap.set("n", "<leader>fn", function() local name = vim.fn.expand("%:t:r") vim.fn.setreg("+", name) vim.notify("Copied: " .. name) end)
+
+-- Highlight all
+vim.keymap.set("n", "<leader>A", "ggVG", { desc = "Highlight entire page"})
