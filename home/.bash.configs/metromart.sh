@@ -33,8 +33,11 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
   local task=$1
+  local java_17_path="/usr/lib/jvm/java-17-openjdk-amd64"
 
-  if ./gradlew clean "$task"; then
+  ./gradlew --stop
+
+  if JAVA_HOME="$java_17_path" ./gradlew clean "$task"; then
     notify-send "Build Success" "$task finished"
   else
     notify-send -u critical "Build Failed" "$task failed"
