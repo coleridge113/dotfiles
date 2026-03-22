@@ -1,6 +1,9 @@
 # System aliases
 # For GNOME
 alias logout='gnome-session-quit --logout --no-prompt'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias notify-send='osascript -e "display notification \"\$1\" with title \"Terminal\"" #'
+fi
 
 # App aliases
 alias chrome='setsid google-chrome > /dev/null 2>&1 &'
@@ -24,6 +27,8 @@ alias nv='cd ~/.config/nvim'
 alias nvn='nv && nvim .'
 alias nvb='nvim $DOT_HOME/.bash.configs'
 alias svb='source ~/.bashrc'
+alias svz='source ~/.zshrc'
+alias nvz='nvim ~/.zshrc'
 alias nvi='nvim ~/.ideavimrc'
 alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'

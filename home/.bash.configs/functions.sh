@@ -81,3 +81,18 @@ function y() {
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+function select-java() {
+    echo "Available Java Versions:"
+    /usr/libexec/java_home -V 2>&1 | grep -E "\d+\.\d+\.\d+"
+    
+    echo -n "Enter the version you want (e.g., 17, 21): "
+    read version
+    
+    if [ -n "$version" ]; then
+        export JAVA_HOME=$(/usr/libexec/java_home -v "$version")
+        export PATH="$JAVA_HOME/bin:$PATH"
+        echo "Switched to Java $version"
+        java -version
+    fi
+}

@@ -10,17 +10,26 @@ function leet_login() {
 
     local TOKEN="$1"
     local SESSION="$2"
-    local BODY="csrftoken=$TOKEN; LEETCODE_SESSION=$SESSION"  
+    local BODY="csrftoken=$TOKEN; LEETCODE_SESSION=$SESSION"
 
     # Detect clipboard and copy
-    if command -v wl-copy &> /dev/null; then
+
+    # macOS
+    if command -v pbcopy &> /dev/null; then
+        echo -n "$BODY" | pbcopy
+        echo "Copied to macOS clipboard (pbcopy)."
+
+    # Wayland
+    elif command -v wl-copy &> /dev/null; then
         echo -n "$BODY" | wl-copy
         echo "Copied to Wayland clipboard (wl-copy)."
 
+    # X11 (xclip)
     elif command -v xclip &> /dev/null; then
         echo -n "$BODY" | xclip -selection clipboard
         echo "Copied to X11 clipboard (xclip)."
 
+    # X11 (xsel)
     elif command -v xsel &> /dev/null; then
         echo -n "$BODY" | xsel --clipboard --input
         echo "Copied to X11 clipboard (xsel)."
