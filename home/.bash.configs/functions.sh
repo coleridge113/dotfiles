@@ -49,37 +49,29 @@ function gc() {
 
 # Android Studio functions
 function studio() {
-    if command -v snap >/dev/null 2>&1 && snap list android-studio >/dev/null 2>&1; then
-        # Ubuntu Snap
-        setsid snap run android-studio "$@" >/dev/null 2>&1 &
-    elif command -v android-studio >/dev/null 2>&1; then
-        # Arch package or AUR build
-        setsid android-studio "$@" >/dev/null 2>&1 &
-    elif command -v studio >/dev/null 2>&1; then
-        # Manual install
-        setsid studio "$@" >/dev/null 2>&1 &
-    else
-        echo "Android Studio not found."
-        return 1
-    fi
-}
+    local candidates=(
+        "android-studio"
+        "/Applications/Android Studio.app/Contents/MacOS/studio"
+        "$HOME/Applications/Android Studio.app/Contents/MacOS/studio"
+        "$HOME/.local/bin/studio"
+    )
 
-function clean_build() {
-    ./gradlew clean assembleDebug
-}
+    for cmd in "${candidates[@]}"; do
+        if command -v "$cmd" >/dev/null 2>&1 || [ -x "$cmd" ]; then
 
-# Nvim functions
-function lsp_clean() {
-    rm -rf .gradle/ kls_database.db build/ .kotlin/ app/build/
-}
+            # Linux has setsid, macOS doesn't
+            if command -v setsid >/dev/null 2>&1; then
+                setsid "$cmd" "$@" >/dev/null 2>&1 &
+            else
+                nohup "$cmd" "$@" >/dev/null 2>&1 &
+            fi
 
-# Yazi functions
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+            return
+        fi
+    done
+
+    echo "Android Studio not found."
+    return 1
 }
 
 function select-java() {

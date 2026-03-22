@@ -1,5 +1,5 @@
 # PATH exports
-# export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Project exports
 export DEV="$HOME/dev/personal"
