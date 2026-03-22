@@ -33,14 +33,28 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
   local task=$1
-  local java_17_path="/usr/lib/jvm/java-17-openjdk-amd64"
+  local j_home=""
 
+  # OS-specific JDK 17 Resolution
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS: Ask the system for the JDK 17 path
+    j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
+  else
+    # Arch: Use the standard JVM path or default
+    j_home="/usr/lib/jvm/java-17-openjdk"
+  fi
+
+  # Fallback: If 17 isn't found, use the current JAVA_HOME
+  : "${j_home:=$JAVA_HOME}"
+
+  echo "🔨 Building with Java: $j_home"
   ./gradlew --stop
 
-  if JAVA_HOME="$java_17_path" ./gradlew clean "$task"; then
+  # Execute with the scoped JAVA_HOME
+  if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
     notify-send "Build Success" "$task finished"
   else
-    notify-send -u critical "Build Failed" "$task failed"
+    notify-send "Build Failed" "$task failed"
   fi
 }
 
@@ -70,7 +84,7 @@ function cancel_jo() {
 }
 alias cj="cancel_jo"
 
-status() {
+function status() {
     JOB_ORDER="$1"
     STATUS="${2:-assigning}"   # default to "assigning" if $2 is empty
 

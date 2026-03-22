@@ -1,10 +1,5 @@
 # PATH exports
-export PATH="$HOME/.local/bin:$PATH"
-
-# Java exports
-export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
-export PATH=$JAVA_HOME/bin:$PATH
-export PATH=$(echo "$PATH" | tr ':' '\n' | awk '!seen[$0]++' | paste -sd:)
+# export PATH="$HOME/.local/bin:$PATH"
 
 # Project exports
 export DEV="$HOME/dev/personal"
@@ -12,10 +7,30 @@ export BUDGET="$DEV/budget"
 export CHAL="$HOME/dev/personal/challenges"
 export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 
-# Android Studio exports
-export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
-export ANDROID_SDK_HOME="$HOME/.config/"
-export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+# --- Universal JAVA_HOME ---
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS: Use the system utility to find the path
+    if [ -x /usr/libexec/java_home ]; then
+        # Tries 17 first (Android stable), then 21, then any
+        export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || /usr/libexec/java_home -v 21 2>/dev/null || /usr/libexec/java_home)
+    fi
+else
+    # Arch Linux: Use the standard 'default' symlink 
+    # This prevents the "invalid directory" error when versions increment
+    if [ -d "/usr/lib/jvm/default" ]; then
+        export JAVA_HOME="/usr/lib/jvm/default"
+    elif [ -d "/usr/lib/jvm/java-17-openjdk" ]; then
+        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
+    fi
+fi
+
+# Add to PATH safely
+if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME/bin" ]; then
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 
 # Node exports
 export NVM_DIR="$HOME/.nvm"
