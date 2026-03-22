@@ -26,6 +26,9 @@ vim.keymap.set("n", "<leader>tv", ":rightbelow vsp|terminal<CR>", { desc = "Vert
 vim.keymap.set("n", "<leader>ts", ":belowright sp|terminal<CR>", {desc = "Horizontal split terminal" })
 vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Initiate switch window" } )
 
+-- QOL
+vim.keymap.set("i", "<C-k>", "<C-o>O", { desc = "Insert line above" })
+
 -- Map <Esc> in terminal mode
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
