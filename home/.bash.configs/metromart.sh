@@ -32,29 +32,26 @@ alias build_rs1='gradle_build_notify assembleRs_stg_1_Debug'
 alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
-  local task=$1
-  local j_home=""
+  local task="$1"
 
-  # OS-specific JDK 17 Resolution
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS: Ask the system for the JDK 17 path
-    j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
-  else
-    # Arch: Use the standard JVM path or default
-    j_home="/usr/lib/jvm/java-17-openjdk"
-  fi
+  local j_home
+  j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
 
-  # Fallback: If 17 isn't found, use the current JAVA_HOME
   : "${j_home:=$JAVA_HOME}"
 
-  echo "🔨 Building with Java: $j_home"
-  ./gradlew --stop
+  if [[ -z "$j_home" ]]; then
+    echo "❌ Java 17 not found and JAVA_HOME not set"
+    return 1
+  fi
 
-  # Execute with the scoped JAVA_HOME
+  echo "🔨 Building with Java: $j_home"
+
+  ./gradlew --stop >/dev/null 2>&1
+
   if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
-    notify-send "Build Success" "$task finished"
+    osascript -e "display notification \"$task finished\" with title \"✅ Build Success\""
   else
-    notify-send "Build Failed" "$task failed"
+    osascript -e "display notification \"$task failed\" with title \"❌ Build Failed\""
   fi
 }
 
