@@ -1,38 +1,25 @@
 # System aliases
-# For GNOME
-alias logout='gnome-session-quit --logout --no-prompt'
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias notify-send='osascript -e "display notification \"\$1\" with title \"Terminal\"" #'
-fi
 
 # App aliases
-alias chrome='setsid google-chrome > /dev/null 2>&1 &'
-alias goverlay='setsid goverlay > /dev/null 2>&1 &'
-alias bitwarden='setsid bitwarden > /dev/null 2>&1 &'
-alias brave='setsid brave > /dev/null 2>&1 &'
-alias postman='setsid postman > /dev/null 2>&1 &'
-alias discord='setsid discord > /dev/null 2>&1 &'
-alias kdenlive='setsid kdenlive > /dev/null 2>&1 &'
-alias spotify='setsid spotify > /dev/null 2>&1 &'
-alias pdf='zathura'
-alias steam='setsid steam > /dev/null 2>&1 &'
-alias viber='setsid viber > /dev/null 2>&1 &'
-alias cam='setsid guvcview > /dev/null 2>&1 &'
-
-# TUI aliases
-alias tt='taskwarrior-tui'
+alias chrome='open -a Google\ Chrome'
+alias bitwarden='open -a Bitwarden'
+alias brave='open -a Brave\ Browser'
+alias postman='open -a Postman'
+alias discord='open -a Discord'
+alias spotify='open -a Spotify'
+alias steam='open -a Steam'
+alias viber='open -a Viber'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
 alias nvn='nv && nvim .'
 alias nvb='nvim $DOT_HOME/.bash.configs'
-alias svb='source ~/.bashrc'
 alias svz='source ~/.zshrc'
 alias nvz='nvim ~/.zshrc'
 alias nvi='nvim ~/.ideavimrc'
 alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'
-alias dot='cd ~/.dotfiles'
+alias dots='cd ~/.dotfiles'
 alias leet='nvim leetcode.nvim'
 
 # Git aliases
@@ -44,10 +31,6 @@ alias lg='lazygit'
 
 # Script aliases
 alias leet_login='$DOT_SCRIPTS/leet_login.sh'
-
-# Hyprland
-alias nvh='nvim ~/.config/hypr'
-alias nvw='nvim ~/.config/waybar'
 
 # Navigation aliases
 alias books='cd ~/Documents/books'
