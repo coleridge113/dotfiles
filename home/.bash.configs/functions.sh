@@ -1,10 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 # System functions
-function naut() {
-    setsid nautilus "$@" > /dev/null 2>&1 &
-}
-
 function timer() {
     local MINUTES="$1"
 
@@ -14,26 +10,17 @@ function timer() {
     }
 
     local END_TIME
-    END_TIME=$(date -d "+$MINUTES minutes" +"%H:%M")
+    END_TIME=$(date -v+"$MINUTES"M +"%H:%M")
 
     (
-        set +m   # disable job control in this subshell
-        nohup bash -c "
-            sleep $((MINUTES * 60))
-            notify-send '⏱  Timer finished' '$MINUTES minute(s) have passed'
-        " >/dev/null 2>&1 &
-    )
+        sleep $((MINUTES * 60))
+        osascript -e "display notification \"$MINUTES minute(s) have passed\" with title \"⏱ Timer finished\""
+    ) >/dev/null 2>&1 &
 
-    echo "⏱  Timer set for $MINUTES minute(s) — ends at $END_TIME"
+    echo "⏱ Timer set for $MINUTES minute(s) — ends at $END_TIME"
 }
 
 # App functions
-function spotify() {
-    setsid spotify > /dev/null 2>&1 &
-    sleep 5
-    pactl set-sink-volume @DEFAULT_SINK@ 50%
-}
-
 function idea() {
     setsid idea "$@" >/dev/null 2>&1 &
 }
@@ -49,26 +36,28 @@ function gc() {
 
 # Android Studio functions
 function studio() {
-    local candidates=(
-        "android-studio"
-        "/Applications/Android Studio.app/Contents/MacOS/studio"
-        "$HOME/Applications/Android Studio.app/Contents/MacOS/studio"
-        "$HOME/.local/bin/studio"
-    )
+    local APP="/Applications/Android Studio.app"
 
-    for cmd in "${candidates[@]}"; do
-        if command -v "$cmd" >/dev/null 2>&1 || [ -x "$cmd" ]; then
-
-            # Linux has setsid, macOS doesn't
-            if command -v setsid >/dev/null 2>&1; then
-                setsid "$cmd" "$@" >/dev/null 2>&1 &
-            else
-                nohup "$cmd" "$@" >/dev/null 2>&1 &
-            fi
-
-            return
+    if [ -d "$APP" ]; then
+        if [ $# -gt 0 ]; then
+            open -a "$APP" "$@"
+        else
+            open -a "$APP"
         fi
-    done
+        return
+    fi
+
+    # fallback if installed in user Applications folder
+    APP="$HOME/Applications/Android Studio.app"
+
+    if [ -d "$APP" ]; then
+        if [ $# -gt 0 ]; then
+            open -a "$APP" "$@"
+        else
+            open -a "$APP"
+        fi
+        return
+    fi
 
     echo "Android Studio not found."
     return 1
