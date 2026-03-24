@@ -33,15 +33,10 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
   local task=$1
-  
-  # 1. Extract Flavor: Everything between 'assemble' and 'Debug/Release'
-  # Example: assembleCs_stg_1_Debug -> cs_stg_1_
   local flavor=$(echo "$task" | sed -E 's/assemble(.*)(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
   
-  # 2. Extract Build Type: Just 'debug' or 'release'
   local build_type=$(echo "$task" | sed -E 's/.*(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
   
-  # Construct the expected APK directory
   local output_dir="app/build/outputs/apk/${flavor}/${build_type}"
   
   echo "🚀 Building $task..."
@@ -54,16 +49,12 @@ function gradle_build_notify () {
     local apk_path=$(find "$output_dir" -name "*.apk" -print -quit 2>/dev/null)
     
     if [ -n "$apk_path" ]; then
-      # Get the absolute path of the DIRECTORY only
       local absolute_dir=$(realpath "$(dirname "$apk_path")")
       
-      # Copy directory path to Wayland clipboard (no newline)
       echo -n "$absolute_dir" | wl-copy
-      
       echo "📦 APK Directory: $absolute_dir"
       echo "📋 Directory path copied to clipboard!"
       
-      # Hyprland notification
       notify-send "Build Complete" "Directory for ${flavor} copied" -i android-studio
     else
       echo "⚠️ Build succeeded, but no APK found in: $output_dir"
