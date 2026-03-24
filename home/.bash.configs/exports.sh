@@ -8,7 +8,7 @@ export CHAL="$HOME/dev/personal/challenges"
 export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 
 # JAVA exports
-export JAVA_HOME="/usr/lib/jvm/default-java"
+export JAVA_HOME="$(dirname $(dirname $(readlink -f /usr/bin/java)))"
 
 # Add to PATH safely
 if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME/bin" ]; then
