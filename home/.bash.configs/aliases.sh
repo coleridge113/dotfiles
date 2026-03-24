@@ -29,7 +29,7 @@ alias nvz='nvim ~/.zshrc'
 alias nvi='nvim ~/.ideavimrc'
 alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'
-alias dot='cd ~/.dotfiles'
+alias dots='cd ~/.dotfiles'
 alias leet='nvim leetcode.nvim'
 
 # Git aliases
