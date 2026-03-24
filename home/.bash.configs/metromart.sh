@@ -33,25 +33,43 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
   local task=$1
+  
+  # 1. Extract Flavor: Everything between 'assemble' and 'Debug/Release'
+  # Example: assembleCs_stg_1_Debug -> cs_stg_1_
+  local flavor=$(echo "$task" | sed -E 's/assemble(.*)(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
+  
+  # 2. Extract Build Type: Just 'debug' or 'release'
+  local build_type=$(echo "$task" | sed -E 's/.*(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
+  
+  # Construct the expected APK directory
+  local output_dir="app/build/outputs/apk/${flavor}/${build_type}"
+  
+  echo "🚀 Building $task..."
+  ./gradlew "$task"
 
-  # Ubuntu JDK 17 path
-  local j_home="/usr/lib/jvm/java-17-openjdk-amd64"
-
-  # fallback if path does not exist
-  if [ ! -d "$j_home" ]; then
-    j_home="$JAVA_HOME"
-  fi
-
-  echo "🔨 Building with Java: $j_home"
-
-  # stop any running gradle daemons
-  ./gradlew --stop
-
-  # run build with scoped JAVA_HOME
-  if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
-    notify-send "Build Success ✅" "$task finished"
+  if [ $? -eq 0 ]; then
+    echo "✅ Build Successful!"
+    
+    # Find the first APK in the directory
+    local apk_path=$(find "$output_dir" -name "*.apk" -print -quit 2>/dev/null)
+    
+    if [ -n "$apk_path" ]; then
+      # Get the absolute path of the DIRECTORY only
+      local absolute_dir=$(realpath "$(dirname "$apk_path")")
+      
+      # Copy directory path to Wayland clipboard (no newline)
+      echo -n "$absolute_dir" | wl-copy
+      
+      echo "📦 APK Directory: $absolute_dir"
+      echo "📋 Directory path copied to clipboard!"
+      
+      # Hyprland notification
+      notify-send "Build Complete" "Directory for ${flavor} copied" -i android-studio
+    else
+      echo "⚠️ Build succeeded, but no APK found in: $output_dir"
+    fi
   else
-    notify-send "Build Failed ❌" "$task failed"
+    echo "❌ Build Failed!"
   fi
 }
 
@@ -120,4 +138,8 @@ function aws_track_list() {
 function ampx_sandbox() {
     npx ampx sandbox --outputs-out-dir \
         ../aws-cognito-test/app/src/main/res/raw
+}
+
+function navigate_to_build_output() {
+    cd ./app/
 }
