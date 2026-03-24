@@ -49,42 +49,19 @@ function gc() {
 
 # Android Studio functions
 function studio() {
-    local candidates=(
-        "android-studio"
-        "/Applications/Android Studio.app/Contents/MacOS/studio"
-        "$HOME/Applications/Android Studio.app/Contents/MacOS/studio"
-        "$HOME/.local/bin/studio"
-    )
+    local studio_cmd="/opt/android-studio/bin/studio.sh"
 
-    for cmd in "${candidates[@]}"; do
-        if command -v "$cmd" >/dev/null 2>&1 || [ -x "$cmd" ]; then
+    # fallback to snap command if manual install not found
+    if [ ! -x "$studio_cmd" ]; then
+        studio_cmd="android-studio"
+    fi
 
-            # Linux has setsid, macOS doesn't
-            if command -v setsid >/dev/null 2>&1; then
-                setsid "$cmd" "$@" >/dev/null 2>&1 &
-            else
-                nohup "$cmd" "$@" >/dev/null 2>&1 &
-            fi
-
-            return
-        fi
-    done
-
-    echo "Android Studio not found."
-    return 1
-}
-
-function select-java() {
-    echo "Available Java Versions:"
-    /usr/libexec/java_home -V 2>&1 | grep -E "\d+\.\d+\.\d+"
-    
-    echo -n "Enter the version you want (e.g., 17, 21): "
-    read version
-    
-    if [ -n "$version" ]; then
-        export JAVA_HOME=$(/usr/libexec/java_home -v "$version")
-        export PATH="$JAVA_HOME/bin:$PATH"
-        echo "Switched to Java $version"
-        java -version
+    if command -v "$studio_cmd" >/dev/null 2>&1 || [ -x "$studio_cmd" ]; then
+        setsid "$studio_cmd" "$@" >/dev/null 2>&1 &
+    else
+        echo "❌ Android Studio not found."
+        echo "Install with:"
+        echo "  sudo snap install android-studio --classic"
+        return 1
     fi
 }

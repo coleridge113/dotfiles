@@ -7,22 +7,8 @@ export BUDGET="$DEV/budget"
 export CHAL="$HOME/dev/personal/challenges"
 export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 
-# --- Universal JAVA_HOME ---
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS: Use the system utility to find the path
-    if [ -x /usr/libexec/java_home ]; then
-        # Tries 17 first (Android stable), then 21, then any
-        export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || /usr/libexec/java_home -v 21 2>/dev/null || /usr/libexec/java_home)
-    fi
-else
-    # Arch Linux: Use the standard 'default' symlink 
-    # This prevents the "invalid directory" error when versions increment
-    if [ -d "/usr/lib/jvm/default" ]; then
-        export JAVA_HOME="/usr/lib/jvm/default"
-    elif [ -d "/usr/lib/jvm/java-17-openjdk" ]; then
-        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
-    fi
-fi
+# JAVA exports
+export JAVA_HOME="/usr/lib/jvm/default-java"
 
 # Add to PATH safely
 if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME/bin" ]; then

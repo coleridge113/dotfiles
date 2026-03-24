@@ -1,9 +1,6 @@
 # System aliases
 # For GNOME
 alias logout='gnome-session-quit --logout --no-prompt'
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias notify-send='osascript -e "display notification \"\$1\" with title \"Terminal\"" #'
-fi
 
 # App aliases
 alias chrome='setsid google-chrome > /dev/null 2>&1 &'
@@ -52,3 +49,6 @@ alias nvw='nvim ~/.config/waybar'
 # Navigation aliases
 alias books='cd ~/Documents/books'
 alias notes='cd $NOTES'
+
+# JAVA aliases
+alias select_java='sudo update-alternatives --config java'

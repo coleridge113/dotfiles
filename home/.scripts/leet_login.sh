@@ -1,42 +1,35 @@
 #!/bin/bash
 
 function leet_login() {
-    # Check if we are missing any arguments
+    # Validate args
     if [[ -z "$1" || -z "$2" ]]; then
-        echo "Error: Missing arguments."
+        echo "❌ Missing arguments."
         echo "Usage: leet_login <TOKEN> <SESSION>"
-        exit 1
+        return 1
     fi
 
     local TOKEN="$1"
     local SESSION="$2"
     local BODY="csrftoken=$TOKEN; LEETCODE_SESSION=$SESSION"
 
-    # Detect clipboard and copy
-
-    # macOS
-    if command -v pbcopy &> /dev/null; then
-        echo -n "$BODY" | pbcopy
-        echo "Copied to macOS clipboard (pbcopy)."
-
-    # Wayland
-    elif command -v wl-copy &> /dev/null; then
+    # Wayland clipboard (Ubuntu default on newer installs)
+    if command -v wl-copy >/dev/null 2>&1; then
         echo -n "$BODY" | wl-copy
-        echo "Copied to Wayland clipboard (wl-copy)."
+        echo "✅ Copied to clipboard (wl-copy)"
 
-    # X11 (xclip)
-    elif command -v xclip &> /dev/null; then
+    # X11 fallback
+    elif command -v xclip >/dev/null 2>&1; then
         echo -n "$BODY" | xclip -selection clipboard
-        echo "Copied to X11 clipboard (xclip)."
-
-    # X11 (xsel)
-    elif command -v xsel &> /dev/null; then
-        echo -n "$BODY" | xsel --clipboard --input
-        echo "Copied to X11 clipboard (xsel)."
+        echo "✅ Copied to clipboard (xclip)"
 
     else
-        echo "Error: No clipboard manager found. String is:"
+        echo "⚠️ Clipboard tool not found."
         echo "$BODY"
+        echo ""
+        echo "Install one of:"
+        echo "  sudo apt install wl-clipboard"
+        echo "  sudo apt install xclip"
+        return 1
     fi
 }
 
