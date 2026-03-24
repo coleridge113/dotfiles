@@ -3,9 +3,9 @@ cursor-invert-fg-bg = true
 cursor-color = cell-foreground
 cursor-style = block
 
-# Opacity
-# background-opacity = 0.95
-
 # Window decoration: must be one of auto, client, server, none
-window-decoration = auto
+window-decoration = true
 
+# Font configuration
+font-family = "JetBrainsMono Nerd Font"
+font-size = 13

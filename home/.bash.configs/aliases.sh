@@ -1,4 +1,5 @@
 # System aliases
+alias dmg_install='$DOT_SCRIPTS/dmg_install.sh'
 
 # App aliases
 alias chrome='open -a Google\ Chrome'
