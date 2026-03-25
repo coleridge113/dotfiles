@@ -1,6 +1,6 @@
 {
     "title": "App shortcuts",
-        "rules": [
+    "rules": [
         {
             "description": "Cmd+Shift+A opens Ghostty",
             "manipulators": [
