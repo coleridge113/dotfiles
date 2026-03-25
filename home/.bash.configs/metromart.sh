@@ -33,28 +33,30 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
 function gradle_build_notify () {
   local task=$1
+
+  local JAVA17_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+
   local flavor=$(echo "$task" | sed -E 's/assemble(.*)(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
-  
   local build_type=$(echo "$task" | sed -E 's/.*(Debug|Release)/\1/' | tr '[:upper:]' '[:lower:]')
-  
+
   local output_dir="app/build/outputs/apk/${flavor}/${build_type}"
-  
-  echo "🚀 Building $task..."
-  ./gradlew "$task"
+
+  echo "🚀 Building $task with Java 17..."
+
+  JAVA_HOME="$JAVA17_HOME" PATH="$JAVA17_HOME/bin:$PATH" ./gradlew "$task"
 
   if [ $? -eq 0 ]; then
     echo "✅ Build Successful!"
-    
-    # Find the first APK in the directory
+
     local apk_path=$(find "$output_dir" -name "*.apk" -print -quit 2>/dev/null)
-    
+
     if [ -n "$apk_path" ]; then
       local absolute_dir=$(realpath "$(dirname "$apk_path")")
-      
+
       echo -n "$absolute_dir" | wl-copy
       echo "📦 APK Directory: $absolute_dir"
       echo "📋 Directory path copied to clipboard!"
-      
+
       notify-send "Build Complete" "Directory for ${flavor} copied" -i android-studio
     else
       echo "⚠️ Build succeeded, but no APK found in: $output_dir"

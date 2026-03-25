@@ -1,3 +1,6 @@
+# Gradle 
+alias clean_build='./gradlew clean assembleDebug'
+
 # Budget project
 alias budget="cd $BUDGET"
 alias baa="cd $BUDGET/android"

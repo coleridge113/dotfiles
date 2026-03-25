@@ -5,3 +5,4 @@ cursor-style = block
 
 # Window decoration: must be one of auto, client, server, none
 window-decoration = false
+
