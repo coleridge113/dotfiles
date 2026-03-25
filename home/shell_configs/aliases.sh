@@ -1,16 +1,39 @@
-# System aliases
-alias dmg_install='$DOT_SCRIPTS/dmg_install.sh'
+# App launcher
+app() {
+    local mac_name="$1"
+    local linux_bin="$2"
+
+    shift 2
+
+    #######################################
+    # macOS
+    #######################################
+    if command -v open >/dev/null 2>&1; then
+        open -a "$mac_name" "$@" >/dev/null 2>&1 &
+        return
+    fi
+
+    #######################################
+    # Linux
+    #######################################
+    if command -v "$linux_bin" >/dev/null 2>&1; then
+        setsid "$linux_bin" "$@" >/dev/null 2>&1 &
+        return
+    fi
+
+    echo "❌ App not found: $mac_name / $linux_bin"
+}
 
 # App aliases
-alias chrome='open -a Google\ Chrome'
-alias bitwarden='open -a Bitwarden'
-alias brave='open -a Brave\ Browser'
-alias postman='open -a Postman'
-alias discord='open -a Discord'
-alias spotify='open -a Spotify'
-alias steam='open -a Steam'
-alias viber='open -a Viber'
-alias ghostty='open -a Ghostty'
+alias chrome='app "Google Chrome" google-chrome'
+alias brave='app "Brave Browser" brave-browser'
+alias discord='app "Discord" discord'
+alias viber='app "Viber" viber'
+alias postman='app "Postman" postman'
+alias ghostty='app "Ghostty" ghostty'
+alias spotify='app "Spotify" spotify'
+alias steam='app "Steam" steam'
+alias bitwarden='app "Bitwarden" bitwarden'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
@@ -33,6 +56,7 @@ alias lg='lazygit'
 
 # Script aliases
 alias leet_login='$DOT_SCRIPTS/leet_login.sh'
+alias dmg_install='$DOT_SCRIPTS/dmg_install.sh'
 
 # Navigation aliases
 alias books='cd ~/Documents/books'
