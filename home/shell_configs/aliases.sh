@@ -38,7 +38,7 @@ alias bitwarden='app "Bitwarden" bitwarden'
 # Vim aliases
 alias nv='cd ~/.config/nvim'
 alias nvn='nv && nvim .'
-alias nvb='nvim $DOT_HOME/.bash.configs'
+alias nvb='nvim $DOT_HOME/shell_configs'
 alias svz='source ~/.zshrc'
 alias nvz='nvim ~/.zshrc'
 alias nvi='nvim ~/.ideavimrc'
