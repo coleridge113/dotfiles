@@ -10,6 +10,7 @@ alias discord='open -a Discord'
 alias spotify='open -a Spotify'
 alias steam='open -a Steam'
 alias viber='open -a Viber'
+alias ghostty='open -a Ghostty'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
