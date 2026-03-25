@@ -1,5 +1,3 @@
-#!/bin/bash
-
 export METROMART="$HOME/dev/metromart"
 export AWS_DEMO="$METROMART/projects/aws-demo"
 
@@ -34,9 +32,31 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 function gradle_build_notify () {
   local task="$1"
 
-  local j_home
-  j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
+  #######################################
+  # Detect OS
+  #######################################
+  local OS="$(uname)"
 
+  #######################################
+  # Resolve Java 17 location
+  #######################################
+  local j_home=""
+
+  if [[ "$OS" == "Darwin" ]]; then
+    # macOS
+    j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
+
+  else
+    # Linux (Ubuntu etc)
+    j_home="/usr/lib/jvm/java-17-openjdk-amd64"
+
+    if [[ ! -d "$j_home" ]]; then
+        echo "❌ openjdk-17-amd64 not found at $j_home"
+        return 1
+    fi
+  fi
+
+  # fallback to existing JAVA_HOME
   : "${j_home:=$JAVA_HOME}"
 
   if [[ -z "$j_home" ]]; then
@@ -46,12 +66,30 @@ function gradle_build_notify () {
 
   echo "🔨 Building with Java: $j_home"
 
+  #######################################
+  # Stop existing gradle daemons
+  #######################################
   ./gradlew --stop >/dev/null 2>&1
 
+  #######################################
+  # Run build
+  #######################################
   if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
-    osascript -e "display notification \"$task finished\" with title \"✅ Build Success\""
+
+    if [[ "$OS" == "Darwin" ]]; then
+      osascript -e "display notification \"$task finished\" with title \"✅ Build Success\""
+    else
+      notify-send "✅ Build Success" "$task finished"
+    fi
+
   else
-    osascript -e "display notification \"$task failed\" with title \"❌ Build Failed\""
+
+    if [[ "$OS" == "Darwin" ]]; then
+      osascript -e "display notification \"$task failed\" with title \"❌ Build Failed\""
+    else
+      notify-send "❌ Build Failed" "$task failed"
+    fi
+
   fi
 }
 

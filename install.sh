@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DOT_HOME="$HOME/.dotfiles/home"
-CONFIG_DIR="$DOT_HOME/.bash.configs"
+CONFIG_DIR="$DOT_HOME/shell_configs"
 BASHRC="$HOME/.bashrc"
-SOURCE_BLOCK="if [ -d \"$DOT_HOME/.bash.configs\" ]; then
-for file in \"$DOT_HOME\"/.bash.configs/*.sh; do
+SOURCE_BLOCK="if [ -d \"$CONFIG_DIR\" ]; then
+for file in \"$CONFIG_DIR/*.sh; do
     [ -r \"\$file\" ] && source \"\$file\"
 done
 fi"
