@@ -155,3 +155,11 @@ function y() {
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+function wdb() {
+    local ip="192.168.100.74" # Your default
+    local port="${1:-5555}"   # Defaults to 5555 if you don't provide one
+    
+    echo "Connecting to $ip:$port..."
+    adb connect "$ip:$port"
+}

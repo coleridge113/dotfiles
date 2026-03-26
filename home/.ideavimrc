@@ -41,3 +41,18 @@ nnoremap <C-l> :tabnext<CR>
 
 " Toggle breakpoint
 nnoremap <leader>b :action ToggleLineBreakpoint<CR>
+
+" Harpoon
+nnoremap <leader>h :action ShowHarpoon<CR>
+nnoremap <leader>a :action AddToHarpoon<CR>
+nnoremap <leader>1 :action GotoHarpoon1<CR>
+nnoremap <leader>2 :action GotoHarpoon2<CR>
+nnoremap <leader>3 :action GotoHarpoon3<CR>
+nnoremap <leader>4 :action GotoHarpoon4<CR>
+nnoremap <leader>5 :action GotoHarpoon5<CR>
+
+" Allow IdeaVim for dialogs
+set ideavimsupport+=dialog
+
+" Set quickscope
+set quickscope

@@ -1,5 +1,5 @@
 # App launcher
-app() {
+function app() {
     local mac_name="$1"
     local linux_bin="$2"
 
@@ -39,6 +39,7 @@ alias bitwarden='app "Bitwarden" bitwarden'
 alias nv='cd ~/.config/nvim'
 alias nvn='nv && nvim .'
 alias nvb='nvim $DOT_HOME/shell_configs'
+alias svb='source ~/.bashrc'
 alias svz='source ~/.zshrc'
 alias nvz='nvim ~/.zshrc'
 alias nvi='nvim ~/.ideavimrc'
