@@ -1,5 +1,5 @@
 # App launcher
-app() {
+function app() {
     local mac_name="$1"
     local linux_bin="$2"
 
