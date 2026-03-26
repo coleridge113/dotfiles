@@ -34,8 +34,16 @@ if [[ -n "$JAVA_HOME" ]]; then
     export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+# Android exports
+if [[ "$(uname)" == "Darwin" ]]; then
+    export ANDROID_HOME="$HOME/Library/Android/sdk"
+else
+    export ANDROID_HOME="$HOME/Android/Sdk"
+fi
+
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
 
 # Node exports
 export NVM_DIR="$HOME/.nvm"
