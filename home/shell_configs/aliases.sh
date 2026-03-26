@@ -46,6 +46,7 @@ alias nvg='nvim ~/.config/ghostty'
 alias nvt='nvim ~/.tmux.conf'
 alias dots='cd ~/.dotfiles'
 alias leet='nvim leetcode.nvim'
+alias nvk='nvim ~/.config/karabiner'
 
 # Git aliases
 alias gs='git status'
