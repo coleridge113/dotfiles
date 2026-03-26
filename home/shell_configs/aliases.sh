@@ -24,6 +24,10 @@ function app() {
     echo "❌ App not found: $mac_name / $linux_bin"
 }
 
+# System aliases
+alias la='ls -la'
+alias ll='ls -l'
+
 # App aliases
 alias chrome='app "Google Chrome" google-chrome'
 alias brave='app "Brave Browser" brave-browser'

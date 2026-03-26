@@ -28,6 +28,7 @@ vim.keymap.set("n", "<leader>w", "<C-w>", { desc = "Initiate switch window" } )
 
 -- QOL
 vim.keymap.set("i", "<C-k>", "<C-o>O", { desc = "Insert line above" })
+vim.keymap.set("n", "<C-k>", "O<Esc>j", { desc = "Insert line above then back to normal mode"})
 
 -- Map <Esc> in terminal mode
 vim.api.nvim_create_autocmd("TermOpen", {
