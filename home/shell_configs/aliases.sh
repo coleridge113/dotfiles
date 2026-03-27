@@ -67,3 +67,4 @@ alias dmg_install='$DOT_SCRIPTS/dmg_install.sh'
 # Navigation aliases
 alias books='cd ~/Documents/books'
 alias notes='cd $NOTES'
+alias scripts='cd $DOT_HOME/.scripts'

@@ -36,6 +36,32 @@ function timer() {
     echo "⏱ Timer set for $MINUTES minute(s) — ends at $END_TIME"
 }
 
+function set_wallpaper() {
+    local img="$1"
+
+    if [[ "$(uname)" != "Darwin" ]]; then
+        echo "Must be in OSX"
+        return 1
+    fi
+
+    if [[ ! -f "$img" ]]; then
+        echo "File not found: $img"
+        return 1
+    fi
+
+    # Convert to absolute path
+    local abs_path=$(abspath "$img")
+
+    # Use a more robust AppleScript syntax
+    osascript -e "tell application \"System Events\" to set picture of every desktop to \"$abs_path\""
+}
+
+# Helper function to ensure path is absolute
+function abspath() {
+    python3 -c "import os, sys; print(os.path.abspath(sys.argv[1]))" "$1"
+}
+alias sw="set_wallpaper "$1""
+
 # App functions
 function studio() {
     local OS="$(uname)"
