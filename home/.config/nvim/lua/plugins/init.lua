@@ -203,6 +203,9 @@ return {
             vim.api.nvim_set_hl(0, "NeoTreeNormal", { link = "Normal" })
             vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { link = "NormalNC" })
             vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { link = "Normal" })
+            vim.opt.fillchars:append({
+                eob = " "
+            })
 
             require("neo-tree").setup({
                 close_if_last_window = true,
