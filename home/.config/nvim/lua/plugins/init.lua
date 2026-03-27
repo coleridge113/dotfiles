@@ -115,10 +115,6 @@ return {
             vim.lsp.config("kotlin_language_server", {
                 cmd = { "kotlin-language-server" },
 
-                cmd_env = {
-                    JAVA_TOOL_OPTIONS = "-Xmx12G -XX:+UseG1GC"
-                },
-
                 root_dir = vim.fs.root(0, {
                     "settings.gradle",
                     "settings.gradle.kts",
