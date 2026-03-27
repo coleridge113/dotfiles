@@ -29,6 +29,9 @@ alias build_cs='gradle_build_notify assembleCs_stg_Debug'
 alias build_rs1='gradle_build_notify assembleRs_stg_1_Debug'
 alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
+alias run_cs='run_gradle_variant installCs_stg_Debug'
+alias deb_cs='run_gradle_variant_debug installCs_stg_Debug'
+
 function gradle_build_notify () {
   local task="$1"
 
@@ -137,25 +140,53 @@ function status() {
 }
 alias status="status"
 
-function aws_track_history() {
-    aws location get-device-position-history \
-        --device-id "$1" \
-        --tracker-name MetromartDemoTracker 
+function run_gradle_variant() {
+    local variant="$1"
+
+    if [[ -z "$variant" ]]; then
+        echo "usage: run_gradle_variant <GradleInstallTask>"
+        echo "example: run_gradle_variant installCs_stg_Debug"
+        return 1
+    fi
+
+    # build + install
+    ./gradlew --stop
+    ./gradlew "$variant" || return 1
+
+    # find most recently installed metromart package
+    local pkg
+    pkg=$(adb shell pm list packages \
+        | grep metromart \
+        | cut -d: -f2 \
+        | tr -d '\r' \
+        | tail -n 1)
+
+    if [[ -z "$pkg" ]]; then
+        echo "Could not detect installed package"
+        return 1
+    fi
+
+    echo "Launching $pkg"
+
+    # launch via launcher intent
+    adb shell monkey \
+        -p "$pkg" \
+        -c android.intent.category.LAUNCHER 1
 }
 
-function aws_track_delete() {
-    aws location batch-delete-device-position-history \
-        --tracker-name MetromartDemoTracker \
-        --device-ids "$1"
+function debug_gradle_variant() {
+    local variant="$1"
+
+    ./gradlew "$variant" || return 1
+
+    local pkg
+    pkg=$(adb shell pm list packages | grep metromart | cut -d: -f2 | tr -d '\r' | tail -n 1)
+
+    echo "Debug launching $pkg"
+
+    adb shell am start -D \
+        -a android.intent.action.MAIN \
+        -c android.intent.category.LAUNCHER \
+        -p "$pkg"
 }
 
-function aws_track_list() {
-    aws location list-device-positions \
-        --tracker-name MetromartDemoTracker \
-        --region ap-southeast-1
-}
-
-function ampx_sandbox() {
-    npx ampx sandbox --outputs-out-dir \
-        ../aws-cognito-test/app/src/main/res/raw
-}
