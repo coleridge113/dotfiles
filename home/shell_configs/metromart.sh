@@ -144,56 +144,67 @@ function run_gradle_variant() {
     local variant="$1"
 
     if [[ -z "$variant" ]]; then
-        echo "usage: run_gradle_variant <TaskName>"
-        echo "example (Android): run_gradle_variant installDebug"
-        echo "example (iOS/macOS): run_gradle_variant MySchemeName"
+        echo "usage: run_gradle_variant <GradleTask>"
         return 1
     fi
 
-    if [[ "$(uname)" == "Darwin" ]]; then
-        ### --- macOS / iOS Logic --- ###
-        echo "Running macOS/iOS variant: $variant"
-        
-        # If using React Native/Flutter, you might use 'npx react-native run-ios'
-        # But for a native/hybrid feel, we'll assume xcodebuild or a simulator launch:
-        
-        # 1. Build and boot simulator if needed (simplified example)
-        # xcrun simctl boot "iPhone 15" 2>/dev/null || true
-        
-        # 2. Run your build tool (adjust this to your specific project needs)
-        ./gradlew "$variant" || return 1
+    # Detect OS once
+    local os
+    os="$(uname)"
 
-        # 3. Find and Launch the .app (Assuming it's in a standard build folder)
-        # On macOS, we 'open' the app; on iOS Sim, we 'simctl launch'
-        local app_path=$(find ./build -name "*.app" | head -n 1)
-        
-        if [[ -f "$app_path" || -d "$app_path" ]]; then
-            echo "Launching $app_path"
-            open "$app_path"
-        else
-            echo "Build finished, but could not find .app to launch."
-        fi
+    # Stop gradle daemon on Linux only (helps avoid stale locks)
+    if [[ "$os" != "Darwin" ]]; then
+        ./gradlew --stop >/dev/null 2>&1
+    fi
 
-    else
-        ### --- Android Logic (Original) --- ###
-        ./gradlew --stop
-        ./gradlew "$variant" || return 1
+    # Run build
+    ./gradlew "$variant" || return 1
 
+    # ---------- ANDROID ----------
+    if [[ "$variant" == *"install"* ]] || [[ "$variant" == *"Debug"* ]]; then
         local pkg
-        pkg=$(adb shell pm list packages \
+
+        pkg=$(
+            adb shell pm list packages \
             | grep metromart \
             | cut -d: -f2 \
             | tr -d '\r' \
-            | tail -n 1)
+            | tail -n 1
+        )
 
         if [[ -z "$pkg" ]]; then
-            echo "Could not detect installed Android package"
+            echo "Android package not detected"
+            echo "Check adb device connection"
             return 1
         fi
 
         echo "Launching Android: $pkg"
         adb shell monkey -p "$pkg" 1
+        return 0
     fi
+
+    # ---------- DESKTOP APP ----------
+    local app_path
+    app_path=$(find ./build -name "*.app" -type d | head -n 1)
+
+    if [[ -z "$app_path" ]]; then
+        echo "No .app found in ./build"
+        return 0
+    fi
+
+    echo "Launching desktop app: $app_path"
+
+    case "$os" in
+        Darwin)
+            open "$app_path"
+            ;;
+        Linux)
+            xdg-open "$app_path" >/dev/null 2>&1 &
+            ;;
+        *)
+            echo "Unsupported OS: $os"
+            ;;
+    esac
 }
 
 function debug_gradle_variant() {
