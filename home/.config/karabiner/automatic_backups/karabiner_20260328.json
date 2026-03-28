@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Cmd+Shift+A opens Ghostty with fixed window size",
+                        "description": "Cmd+Shift+A opens Ghostty",
                         "manipulators": [
                             {
                                 "from": {
@@ -14,7 +14,7 @@
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [{ "shell_command": "open -na \"Ghostty\"; sleep 0.2; osascript -e 'tell application \"System Events\" to tell process \"Ghostty\" to set size of front window to {90, 15}'" }],
+                                "to": [{ "shell_command": "open -a \"Ghostty\"" }],
                                 "type": "basic"
                             }
                         ]
