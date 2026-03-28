@@ -189,3 +189,20 @@ function wdb() {
     echo "Connecting to $ip:$port..."
     adb connect "$ip:$port"
 }
+
+function sketch() {
+    local dir="$HOME/Documents/sketch"
+    local name="$dir/sketch.md"
+
+    if [[ ! -d $dir ]]; then
+        echo "sketch/ does not exist. Creating..."
+        mkdir -p $dir
+    fi
+
+    if [[ -f $name ]]; then
+        rm $name
+    fi
+
+    cd $dir
+    nvim $name
+}
