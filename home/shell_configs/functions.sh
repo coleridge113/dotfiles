@@ -202,3 +202,22 @@ function sketch() {
     cd $dir
     nvim $name
 }
+
+# Bluetooth functions
+function bcon() {
+    local input="$1"
+
+    declare -A bt_devices=(
+        [ugreen]="60:80:A3:46:A8:61"
+        [sound]="E8:EE:CC:E0:D0:52"
+    )
+
+    local mac_address="${bt_devices[$input]}"
+
+    if [[ $mac_address == "" ]]; then
+        "Device not found..."
+        return 1
+    fi
+
+    bluetoothctl connect $mac_address
+}
