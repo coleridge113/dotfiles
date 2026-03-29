@@ -33,64 +33,106 @@ alias run_cs='run_gradle_variant installCs_stg_Debug'
 alias deb_cs='run_gradle_variant_debug installCs_stg_Debug'
 
 function gradle_build_notify () {
+
   local task="$1"
 
   #######################################
   # Detect OS
   #######################################
-  local OS="$(uname)"
+  local os
+  os="$(uname)"
 
   #######################################
   # Resolve Java 17 location
   #######################################
   local j_home=""
 
-  if [[ "$OS" == "Darwin" ]]; then
+  if [[ "$os" == "Darwin" ]]; then
+
     # macOS
-    j_home=$(/usr/libexec/java_home -v 17 2>/dev/null)
+    j_home=$(
+      /usr/libexec/java_home -v 17 2>/dev/null \
+      || /usr/libexec/java_home 2>/dev/null
+    )
 
   else
-    # Linux (Ubuntu etc)
-    j_home="/usr/lib/jvm/java-17-openjdk-amd64"
 
-    if [[ ! -d "$j_home" ]]; then
-        echo "❌ openjdk-17-amd64 not found at $j_home"
-        return 1
+    # Linux (Ubuntu, Arch)
+    local jvm_dir="/usr/lib/jvm"
+
+    for candidate in \
+      "$jvm_dir/java-17-openjdk" \
+      "$jvm_dir/java-17-openjdk-"* \
+      "$jvm_dir/jdk-17"*; do
+
+      if [[ -d "$candidate" ]]; then
+        j_home="$candidate"
+        break
+      fi
+    done
+
+    # fallback: detect from active java binary
+    if [[ -z "$j_home" ]] && command -v java >/dev/null 2>&1; then
+      j_home="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")"
     fi
   fi
 
+
+  #######################################
   # fallback to existing JAVA_HOME
+  #######################################
   : "${j_home:=$JAVA_HOME}"
 
   if [[ -z "$j_home" ]]; then
-    echo "❌ Java 17 not found and JAVA_HOME not set"
+    echo "❌ Java 17 not found"
     return 1
   fi
 
-  echo "🔨 Building with Java: $j_home"
+  echo "🔨 Building with Java:"
+  echo "   $j_home"
+  echo
 
   #######################################
   # Stop existing gradle daemons
   #######################################
   ./gradlew --stop >/dev/null 2>&1
 
+
   #######################################
   # Run build
   #######################################
   if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
 
-    if [[ "$OS" == "Darwin" ]]; then
-      osascript -e "display notification \"$task finished\" with title \"✅ Build Success\""
+    #######################################
+    # success notification
+    #######################################
+    if [[ "$os" == "Darwin" ]]; then
+
+      osascript -e \
+        "display notification \"$task finished\" with title \"✅ Build Success\""
+
     else
-      notify-send "✅ Build Success" "$task finished"
+
+      command -v notify-send >/dev/null 2>&1 \
+        && notify-send "✅ Build Success" "$task finished" \
+        || echo "✅ Build Success: $task finished"
     fi
 
   else
 
-    if [[ "$OS" == "Darwin" ]]; then
-      osascript -e "display notification \"$task failed\" with title \"❌ Build Failed\""
+    #######################################
+    # failure notification
+    #######################################
+    if [[ "$os" == "Darwin" ]]; then
+
+      osascript -e \
+        "display notification \"$task failed\" with title \"❌ Build Failed\""
+
     else
-      notify-send "❌ Build Failed" "$task failed"
+
+      command -v notify-send >/dev/null 2>&1 \
+        && notify-send "❌ Build Failed" "$task failed" \
+        || echo "❌ Build Failed: $task failed"
     fi
 
   fi
