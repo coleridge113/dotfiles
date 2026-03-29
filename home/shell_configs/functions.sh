@@ -193,10 +193,10 @@ function select-java() {
 function sketch() {
     local dir="$HOME/Documents"
     local name="sketch.md"
-    local path="$dir/$name"
+    local file="$dir/$name"
 
-    if [[ -f $path ]]; then
-        rm $path
+    if [[ -f "$file" ]]; then
+        rm "$file"
     fi
 
     cd $dir
