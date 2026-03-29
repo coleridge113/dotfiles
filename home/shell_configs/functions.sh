@@ -189,3 +189,16 @@ function select-java() {
     echo "$JAVA_HOME"
     java -version
 }
+
+function sketch() {
+    local dir="$HOME/Documents"
+    local name="sketch.md"
+    local path="$dir/$name"
+
+    if [[ -f $path ]]; then
+        rm $path
+    fi
+
+    cd $dir
+    nvim $name
+}
