@@ -7,9 +7,9 @@ export BUDGET="$DEV/budget"
 export CHAL="$HOME/dev/personal/challenges"
 export CRYPTO="$HOME/dev/personal/challenges/cryptomonitoring"
 
-# JAVA exports (macOS + Ubuntu)
+# JAVA exports (macOS + Ubuntu + Arch)
 if command -v /usr/libexec/java_home >/dev/null 2>&1; then
-    # macOS
+    # ----- macOS -----
     export JAVA_HOME=$(
         /usr/libexec/java_home -v 17 2>/dev/null \
         || /usr/libexec/java_home -v 21 2>/dev/null \
@@ -17,19 +17,29 @@ if command -v /usr/libexec/java_home >/dev/null 2>&1; then
     )
 
 elif [[ -d "/usr/lib/jvm" ]]; then
-    # Ubuntu / Linux common locations
-    for v in 17 21 ""; do
-        if [[ -d "/usr/lib/jvm/java-${v}-openjdk-amd64" ]]; then
-            export JAVA_HOME="/usr/lib/jvm/java-${v}-openjdk-amd64"
-            break
-        fi
+    # ----- Linux (Ubuntu, Arch, etc) -----
+
+    for version in 17 21 ""; do
+        for candidate in \
+            "/usr/lib/jvm/java-${version}-openjdk" \
+            "/usr/lib/jvm/java-${version}-openjdk-"* \
+            "/usr/lib/jvm/jdk-${version}"*; do
+
+            if [[ -d "$candidate" ]]; then
+                export JAVA_HOME="$candidate"
+                break 2
+            fi
+        done
     done
 
-    # fallback: pick first JVM found
-    [[ -z "$JAVA_HOME" ]] && export JAVA_HOME="$(ls -d /usr/lib/jvm/* 2>/dev/null | head -n1)"
+    # fallback: first installed JVM
+    if [[ -z "$JAVA_HOME" ]]; then
+        export JAVA_HOME="$(ls -d /usr/lib/jvm/* 2>/dev/null | head -n1)"
+    fi
 fi
 
-# Add java to PATH if found
+
+# ensure java is on PATH
 if [[ -n "$JAVA_HOME" ]]; then
     export PATH="$JAVA_HOME/bin:$PATH"
 fi

@@ -123,39 +123,53 @@ function gc() {
 
 
 function select-java() {
-    local OS="$(uname)"
+    local os
+    os="$(uname)"
 
     echo "Available Java Versions:"
+    echo
 
     #######################################
     # macOS
     #######################################
-    if [[ "$OS" == "Darwin" ]]; then
-        /usr/libexec/java_home -V 2>&1 | grep -E "\d+\."
+    if [[ "$os" == "Darwin" ]]; then
+        /usr/libexec/java_home -V 2>&1 \
+            | awk -F '"' '/version/ {print $2}' \
+            | sort -u
 
-        echo -n "Enter the version you want (e.g., 17, 21): "
-        read version
+        echo
+        read -rp "Enter version (17, 21, etc): " version
 
         if [[ -n "$version" ]]; then
             JAVA_HOME=$(/usr/libexec/java_home -v "$version" 2>/dev/null)
         fi
 
     #######################################
-    # Ubuntu / Linux
+    # Linux (Ubuntu, Arch)
     #######################################
     else
         local jvm_dir="/usr/lib/jvm"
 
-        ls "$jvm_dir" | grep -E "java-.*" || {
-            echo "❌ No JVMs found in $jvm_dir"
+        if [[ ! -d "$jvm_dir" ]]; then
+            echo "❌ $jvm_dir not found"
             return 1
-        }
+        fi
 
-        echo -n "Enter the version you want (e.g., 17, 21): "
-        read version
+        # Extract versions from directory names
+        ls "$jvm_dir" \
+            | grep -Ei 'jdk|java|temurin|zulu' \
+            | sed -E 's/.*([0-9]{2}).*/\1/' \
+            | sort -u
+
+        echo
+        read -rp "Enter version (17, 21, etc): " version
 
         if [[ -n "$version" ]]; then
-            JAVA_HOME=$(ls -d "$jvm_dir"/*"$version"* 2>/dev/null | head -n1)
+            JAVA_HOME=$(
+                find "$jvm_dir" -maxdepth 1 -type d \
+                | grep -E "$version" \
+                | head -n1
+            )
         fi
     fi
 
@@ -170,39 +184,8 @@ function select-java() {
     export JAVA_HOME
     export PATH="$JAVA_HOME/bin:$PATH"
 
-    echo "☕ Switched to Java $version"
+    echo
+    echo "☕ Switched to:"
+    echo "$JAVA_HOME"
     java -version
-}
-
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
-}
-
-function wdb() {
-    local ip="192.168.100.74" # Your default
-    local port="${1:-5555}"   # Defaults to 5555 if you don't provide one
-    
-    echo "Connecting to $ip:$port..."
-    adb connect "$ip:$port"
-}
-
-function sketch() {
-    local dir="$HOME/Documents/sketch"
-    local name="$dir/sketch.md"
-
-    if [[ ! -d $dir ]]; then
-        echo "sketch/ does not exist. Creating..."
-        mkdir -p $dir
-    fi
-
-    if [[ -f $name ]]; then
-        rm $name
-    fi
-
-    cd $dir
-    nvim $name
 }
