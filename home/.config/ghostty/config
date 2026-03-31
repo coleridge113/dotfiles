@@ -9,3 +9,6 @@ window-decoration = true
 # Font configuration
 font-family = "JetBrainsMono Nerd Font"
 font-size = 13
+
+window-width = 90
+window-height = 10
