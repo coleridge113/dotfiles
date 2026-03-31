@@ -15,6 +15,9 @@ alias cog="cd $AWS_DEMO/aws-cognito-test"
 alias event="cd $AWS_DEMO/aws-demo-backend"
 alias demo="cd $AWS_DEMO"
 
+# Navigation
+alias build_output="cd ./app/build/outputs/apk/cs_stg_/debug"
+
 # DSM
 alias dsm="nvim $NOTES/metromart/dsm-notes.md"
 
