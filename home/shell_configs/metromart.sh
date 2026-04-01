@@ -37,108 +37,147 @@ alias deb_cs='run_gradle_variant_debug installCs_stg_Debug'
 
 function gradle_build_notify () {
 
-  local task="$1"
+    local task="$1"
+    shift
 
-  #######################################
-  # Detect OS
-  #######################################
-  local os
-  os="$(uname)"
+    #######################################
+    # Parse flags
+    #######################################
+    local should_open=false
 
-  #######################################
-  # Resolve Java 17 location
-  #######################################
-  local j_home=""
-
-  if [[ "$os" == "Darwin" ]]; then
-
-    # macOS
-    j_home=$(
-      /usr/libexec/java_home -v 17 2>/dev/null \
-      || /usr/libexec/java_home 2>/dev/null
-    )
-
-  else
-
-    # Linux (Ubuntu, Arch)
-    local jvm_dir="/usr/lib/jvm"
-
-    for candidate in \
-      "$jvm_dir/java-17-openjdk" \
-      "$jvm_dir/java-17-openjdk-"* \
-      "$jvm_dir/jdk-17"*; do
-
-      if [[ -d "$candidate" ]]; then
-        j_home="$candidate"
-        break
-      fi
+    for arg in "$@"; do
+        case "$arg" in
+            --open|-op)
+                should_open=true
+                ;;
+        esac
     done
 
-    # fallback: detect from active java binary
-    if [[ -z "$j_home" ]] && command -v java >/dev/null 2>&1; then
-      j_home="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")"
+
+    #######################################
+    # Detect OS
+    #######################################
+    local os
+    os="$(uname)"
+
+    #######################################
+    # Resolve Java 17
+    #######################################
+    local j_home=""
+
+    if [[ "$os" == "Darwin" ]]; then
+        j_home=$(
+            /usr/libexec/java_home -v 17 2>/dev/null \
+                || /usr/libexec/java_home 2>/dev/null
+            )
+        else
+            local jvm_dir="/usr/lib/jvm"
+
+            for candidate in \
+                "$jvm_dir/java-17-openjdk" \
+                "$jvm_dir/java-17-openjdk-"* \
+                "$jvm_dir/jdk-17"*; do
+
+            if [[ -d "$candidate" ]]; then
+                j_home="$candidate"
+                break
+            fi
+        done
+
+        if [[ -z "$j_home" ]] && command -v java >/dev/null 2>&1; then
+            j_home="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")"
+        fi
     fi
-  fi
+
+    : "${j_home:=$JAVA_HOME}"
+
+    if [[ -z "$j_home" ]]; then
+        echo "❌ Java 17 not found"
+        return 1
+    fi
+
+    echo "🔨 Building with Java:"
+    echo "   $j_home"
+    echo
 
 
-  #######################################
-  # fallback to existing JAVA_HOME
-  #######################################
-  : "${j_home:=$JAVA_HOME}"
-
-  if [[ -z "$j_home" ]]; then
-    echo "❌ Java 17 not found"
-    return 1
-  fi
-
-  echo "🔨 Building with Java:"
-  echo "   $j_home"
-  echo
-
-  #######################################
-  # Stop existing gradle daemons
-  #######################################
-  ./gradlew --stop >/dev/null 2>&1
+    #######################################
+    # Move to project folder
+    #######################################
+    cd "$METROMART/projects/android-cs-java" || return 1
 
 
-  #######################################
-  # Run build
-  #######################################
-  if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
+    #######################################
+    # Stop daemons
+    #######################################
+    ./gradlew --stop >/dev/null 2>&1
+
+
+    #######################################
+    # Run build
+    #######################################
+    if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
 
     #######################################
     # success notification
     #######################################
     if [[ "$os" == "Darwin" ]]; then
-
-      osascript -e \
-        "display notification \"$task finished\" with title \"✅ Build Success\""
-
+        osascript -e \
+            "display notification \"$task finished\" with title \"✅ Build Success\""
     else
-
-      command -v notify-send >/dev/null 2>&1 \
-        && notify-send "✅ Build Success" "$task finished" \
-        || echo "✅ Build Success: $task finished"
+        command -v notify-send >/dev/null 2>&1 \
+            && notify-send "✅ Build Success" "$task finished" \
+            || echo "✅ Build Success: $task finished"
     fi
 
-  else
 
     #######################################
-    # failure notification
+    # open apk folder
     #######################################
-    if [[ "$os" == "Darwin" ]]; then
+    if $should_open; then
 
-      osascript -e \
+        local apk_path
+
+        apk_path=$(
+            find . -path "*/outputs/apk/*" -name "*.apk" -print0 \
+                | xargs -0 ls -t 2>/dev/null \
+                | head -n 1
+            )
+
+            if [[ -n "$apk_path" ]]; then
+
+                echo
+                echo "📦 Opening:"
+                echo "$apk_path"
+
+                if [[ "$os" == "Darwin" ]]; then
+                    open "$(dirname "$apk_path")"
+                else
+                    xdg-open "$(dirname "$apk_path")"
+                fi
+
+            else
+                echo "⚠️ APK not found"
+            fi
+
+    fi
+
+
+else
+
+#######################################
+# failure notification
+#######################################
+if [[ "$os" == "Darwin" ]]; then
+    osascript -e \
         "display notification \"$task failed\" with title \"❌ Build Failed\""
-
-    else
-
-      command -v notify-send >/dev/null 2>&1 \
+else
+    command -v notify-send >/dev/null 2>&1 \
         && notify-send "❌ Build Failed" "$task failed" \
         || echo "❌ Build Failed: $task failed"
-    fi
+fi
 
-  fi
+    fi
 }
 
 function register_token() {
