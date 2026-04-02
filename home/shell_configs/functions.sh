@@ -138,7 +138,9 @@ function select-java() {
             | sort -u
 
         echo
-        read -rp "Enter version (17, 21, etc): " version
+
+        printf "Enter version (17, 21, etc): "
+        read version
 
         if [[ -n "$version" ]]; then
             JAVA_HOME=$(/usr/libexec/java_home -v "$version" 2>/dev/null)
@@ -162,7 +164,9 @@ function select-java() {
             | sort -u
 
         echo
-        read -rp "Enter version (17, 21, etc): " version
+
+        printf "Enter version (17, 21, etc): "
+        read version
 
         if [[ -n "$version" ]]; then
             JAVA_HOME=$(
