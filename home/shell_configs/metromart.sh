@@ -150,11 +150,7 @@ function gradle_build_notify () {
                 echo "📦 Opening:"
                 echo "$apk_path"
 
-                if [[ "$os" == "Darwin" ]]; then
-                    open "$(dirname "$apk_path")"
-                else
-                    xdg-open "$(dirname "$apk_path")"
-                fi
+                open "$(dirname "$apk_path")"
 
             else
                 echo "⚠️ APK not found"
