@@ -210,6 +210,7 @@ function sketch() {
 # Bluetooth functions
 function bcon() {
     local input="$1"
+    local cmd
 
     declare -A bt_devices=(
         [ugreen]="60:80:A3:46:A8:61"
@@ -218,12 +219,18 @@ function bcon() {
 
     local mac_address="${bt_devices[$input]}"
 
+    if [[ $(uname) == "Darwin" ]]; then
+        cmd=(blueutil --connect)
+    else
+        cmd=(bluetoothctl connect)
+    fi
+
     if [[ $mac_address == "" ]]; then
         "Device not found..."
         return 1
     fi
 
-    bluetoothctl connect $mac_address
+    "${cmd[@]}" $mac_address
 }
 
 # Yazi functions
