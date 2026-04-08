@@ -29,6 +29,7 @@ alias rspr="nvim $METROMART/templates/rs-pr.md"
 
 # Gradle
 alias build_cs='gradle_build_notify assembleCs_stg_Debug'
+alias build_csr='gradle_build_notify assembleCs_stg_Release'
 alias build_rs1='gradle_build_notify assembleRs_stg_1_Debug'
 alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 
@@ -150,11 +151,7 @@ function gradle_build_notify () {
                 echo "📦 Opening:"
                 echo "$apk_path"
 
-                if [[ "$os" == "Darwin" ]]; then
-                    open "$(dirname "$apk_path")"
-                else
-                    xdg-open "$(dirname "$apk_path")"
-                fi
+                open "$(dirname "$apk_path")"
 
             else
                 echo "⚠️ APK not found"
