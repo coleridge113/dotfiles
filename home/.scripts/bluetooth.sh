@@ -4,6 +4,44 @@ readonly bt_dir="$HOME/.config/bluetooth"
 readonly filepath="$bt_dir/devices.conf"
 readonly OS="$(uname -s)"
 
+function main() {
+    local cmd="$1"
+    shift
+
+    case "$cmd" in
+        connect|con)
+            bt_connect "$@"
+            ;;
+
+        disconnect|dis|dc)
+            bt_disconnect "$@"
+            ;;
+
+        status|st)
+            bt_is_connected "$@"
+            ;;
+
+        find)
+            bt_find_paired "$@"
+            ;;
+
+        save)
+            bt_save_paired
+            ;;
+
+        help|"")
+            bt_help
+            ;;
+
+        *)
+            echo "Unknown command $cmd"
+            bt_help
+            return 1
+            ;;
+
+    esac
+}
+
 function bt_save_paired() {
     local cmd
 
@@ -124,6 +162,22 @@ function bt_is_connected() {
     fi
 }
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    "$@"
-fi
+bt_help() {
+    cat <<EOF
+    Bluetooth helper
+
+    Usage:
+      bt connect <device>
+      bt disconnect <device>
+      bt status <device>
+      bt list
+      bt save
+
+    Aliases:
+      connect     con
+      disconnect  dis dc
+      status      st
+EOF
+}
+
+main "$@"
