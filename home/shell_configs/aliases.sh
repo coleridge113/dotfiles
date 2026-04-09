@@ -71,6 +71,7 @@ alias scripts='cd $DOT_HOME/.scripts'
 alias ss='cd $HOME/dev/personal/scripting'
 
 # Bluetooth aliases
-alias bcon='$DOT_SCRIPTS/bluetooth.sh bcon'
+alias bcon='$DOT_SCRIPTS/bluetooth.sh bt_connect'
+alias bt_dc='$DOT_SCRIPTS/bluetooth.sh bt_disconnect'
 alias bt_find='$DOT_SCRIPTS/bluetooth.sh bt_find_paired'
 alias bt_save='$DOT_SCRIPTS/bluetooth.sh bt_save_paired'

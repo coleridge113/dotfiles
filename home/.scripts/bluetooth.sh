@@ -2,11 +2,12 @@
 
 readonly bt_dir="$HOME/.config/bluetooth"
 readonly filepath="$bt_dir/devices.conf"
+readonly OS="$(uname -s)"
 
 function bt_save_paired() {
     local cmd
 
-    if [[ $(uname) == "Darwin" ]]; then
+    if [[ $OS == "Darwin" ]]; then
         cmd=(blueutil --paired)
     else
         cmd=(bluetoothctl paired-devices)
@@ -54,17 +55,17 @@ function bt_find_paired() {
     local keyword="$1"
 
     while IFS="=" read -r key value; do
-        if [[ "${key,,}" =~ ${keyword,,} ]]; then
+        if [[ "${key,,}" =~ "${keyword,,}" ]]; then
             echo "$value"
         fi
     done < "$filepath"
 }
 
-function bcon() {
+function bt_connect() {
     local cmd
     local mac_address=$(bt_find_paired "$1") 
 
-    if [[ $(uname) == "Darwin" ]]; then
+    if [[ $OS == "Darwin" ]]; then
         cmd=(blueutil --connect) 
     else
         cmd=(bluetoothctl connect) 
@@ -80,6 +81,46 @@ function bcon() {
     else
         echo "Failed to connect..."
         return 1
+    fi
+}
+
+function bt_disconnect() {
+    local mac
+    mac="$(bt_find_paired "$1")"
+
+    if [[ -z $mac ]]; then
+        echo "Device not found..."
+        return 1
+    fi
+
+    if bt_is_connected "$mac" &> /dev/null; then
+        if [[ $OS == "Darwin" ]]; then
+            blueutil --disconnect "$mac" &> /dev/null
+        else
+            bluetoothctl disconnect "$mac" &> /dev/null
+        fi
+
+        if [[ $? -eq 0 ]]; then
+            echo "Disconnected device successfully"
+        else
+            echo "Error disconnecting device..."
+            return 1
+        fi
+    else
+        echo "Device is not connected..."
+        return 1
+    fi
+}
+
+function bt_is_connected() {
+    local mac="$1"
+    local output
+
+    if [[ $OS == "Darwin" ]]; then
+        [[ $(blueutil --is-connected "$mac") == 1 ]]
+    else
+        output="$(bluetoothctl info "$mac")"
+        [[ $output == *"Connected: yes"* ]]
     fi
 }
 
