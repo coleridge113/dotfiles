@@ -69,3 +69,8 @@ alias books='cd ~/Documents/books'
 alias notes='cd $NOTES'
 alias scripts='cd $DOT_HOME/.scripts'
 alias ss='cd $HOME/dev/personal/scripting'
+
+# Bluetooth aliases
+alias bcon='$DOT_SCRIPTS/bluetooth.sh bcon'
+alias bt_find='$DOT_SCRIPTS/bluetooth.sh bt_find_paired'
+alias bt_save='$DOT_SCRIPTS/bluetooth.sh bt_save_paired'

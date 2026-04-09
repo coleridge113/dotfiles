@@ -207,32 +207,6 @@ function sketch() {
     nvim $name
 }
 
-# Bluetooth functions
-function bcon() {
-    local input="$1"
-    local cmd
-
-    declare -A bt_devices=(
-        [ugreen]="60:80:A3:46:A8:61"
-        [sound]="E8:EE:CC:E0:D0:52"
-    )
-
-    local mac_address="${bt_devices[$input]}"
-
-    if [[ $(uname) == "Darwin" ]]; then
-        cmd=(blueutil --connect)
-    else
-        cmd=(bluetoothctl connect)
-    fi
-
-    if [[ $mac_address == "" ]]; then
-        "Device not found..."
-        return 1
-    fi
-
-    "${cmd[@]}" $mac_address
-}
-
 # Yazi functions
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
