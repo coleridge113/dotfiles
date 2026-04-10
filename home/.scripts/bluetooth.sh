@@ -44,11 +44,14 @@ function main() {
 
 function bt_save_paired() {
     local cmd
+    local regex
 
     if [[ $OS == "Darwin" ]]; then
         cmd=(blueutil --paired)
+        regex='([0-9a-f-]{17}).*"([^"]+)"'
     else
-        cmd=(bluetoothctl paired-devices)
+        cmd=(bluetoothctl devices)
+        regex='^Device[[:space:]]+([0-9A-F:]{17})[[:space:]]+(.+)$'
     fi
 
     if ! command -v ${cmd[0]} &> /dev/null; then
@@ -57,7 +60,6 @@ function bt_save_paired() {
     fi
 
     declare -A devices
-    local regex='([0-9a-f-]{17}).*"([^"]+)"'
 
     if [[ ! -f $filepath ]]; then
         mkdir -p $(dirname $filepath) || \
