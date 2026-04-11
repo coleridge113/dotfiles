@@ -29,6 +29,10 @@ function main() {
             bt_save_paired
             ;;
 
+        list)
+            bt_list_paired
+            ;;
+
         help|"")
             bt_help
             ;;
@@ -89,6 +93,17 @@ function bt_save_paired() {
 
     echo "Successfully saved ${#devices[@]} devices"
     return 0
+}
+
+function bt_list_paired() {
+
+    if [[ $OS == "Darwin" ]]; then
+        cmd=(blueutil --paired)
+    else
+        cmd=(bluetoothctl devices)
+    fi
+
+    "${cmd[@]}"
 }
 
 function bt_find_paired() {
@@ -164,7 +179,7 @@ function bt_is_connected() {
     fi
 }
 
-bt_help() {
+function bt_help() {
     cat <<EOF
     Bluetooth helper
 
