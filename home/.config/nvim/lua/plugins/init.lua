@@ -82,7 +82,7 @@ return {
             require("mason").setup()
 
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "jdtls", "kotlin_language_server", "ts_ls" },
+                ensure_installed = { "lua_ls" },
             })
 
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
