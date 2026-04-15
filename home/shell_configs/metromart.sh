@@ -221,6 +221,39 @@ function status() {
 }
 alias status="status"
 
+function assign() {
+    # Ensure variables are local to prevent side effects
+    local JOB_ORDER="$1"
+    local RESPONSE
+    
+    # Using double quotes for the data block to allow variable expansion
+    RESPONSE=$(curl -so /dev/null -w "%{http_code}" "https://api-staging.metromart.com/api/v1/consignments?include=job-order.checkout,user" \
+        -X POST \
+        -H "accept: application/vnd.api+json" \
+        -H "content-type: application/vnd.api+json" \
+        -H "authorization: $WEB_TOKEN" \
+        --data-raw "{
+            \"data\": {
+                \"attributes\": {
+                    \"principal\": false,
+                    \"dispatch-type\": null,
+                    \"manual-dispatch-reason\": \"Runners/Shoppers accident\",
+                    \"updated-at\": null,
+                    \"created-at\": null
+                },
+                \"relationships\": {
+                    \"user\": { \"data\": { \"type\": \"users\", \"id\": \"414437\" } },
+                    \"job-order\": { \"data\": { \"type\": \"job-orders\", \"id\": \"$JOB_ORDER\" } },
+                    \"assigned-by-user\": { \"data\": null }
+                },
+                \"type\": \"consignments\"
+            }
+        }"
+    )
+    
+    echo "Response code: $RESPONSE"
+}
+
 function run_gradle_variant() {
     local variant="$1"
 
