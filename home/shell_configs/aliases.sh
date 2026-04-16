@@ -72,3 +72,6 @@ alias ss='cd $HOME/dev/personal/scripting'
 
 # Bluetooth aliases
 alias bt='$DOT_SCRIPTS/bluetooth.sh'
+
+# Tar aliases
+alias install_discord='$DOT_SCRIPTS/install_discord.sh'
