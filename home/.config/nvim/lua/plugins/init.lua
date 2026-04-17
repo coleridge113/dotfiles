@@ -109,50 +109,48 @@ return {
             })
             vim.lsp.enable("ts_ls")
 
-            ------------------------------------------------
-            -- Kotlin
-            ------------------------------------------------
-            vim.lsp.config("kotlin_language_server", {
-                cmd = { "kotlin-language-server" },
-
-                root_dir = vim.fs.root(0, {
-                    "settings.gradle",
-                    "settings.gradle.kts",
-                }),
-
-                init_options = {
-                    storagePath = vim.fn.stdpath("cache") .. "/kotlin-language-server",
-                    indexLibraries = false,
-                    enableScriptDependencies = true
-                },
-
-                settings = {
-                    kotlin = {
-                        excludeFolders = {
-                            ".git",
-                            ".idea",
-                            ".gradle",
-                            "**/.gradle",
-                            "build",
-                            "**/build",
-                            "**/generated",
-                            "**/intermediates",
-                            "**/.cxx",
-                            "**/tmp"
-                        }
-                    }
-                },
-            })
-
-            vim.lsp.enable("kotlin_language_server")
-            ------------------------------------------------
-            -- JDTLS
-            ------------------------------------------------
-            vim.lsp.config("jdtls", {
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-            vim.lsp.enable("jdtls")
+            -- ------------------------------------------------
+            -- -- Kotlin
+            -- ------------------------------------------------
+            -- vim.lsp.config("kotlin_language_server", {
+            --     cmd = { "kotlin-language-server" },
+            --
+            --     root_dir = vim.fs.root(0, {
+            --         "settings.gradle",
+            --         "settings.gradle.kts",
+            --     }),
+            --
+            --     init_options = {
+            --         storagePath = vim.fn.stdpath("cache") .. "/kotlin-language-server",
+            --         indexLibraries = false,
+            --         enableScriptDependencies = true
+            --     },
+            --
+            --     settings = {
+            --         kotlin = {
+            --             excludeFolders = {
+            --                 ".git",
+            --                 ".idea",
+            --                 ".gradle",
+            --                 "**/.gradle",
+            --                 "build",
+            --                 "**/build",
+            --                 "**/generated",
+            --                 "**/intermediates",
+            --                 "**/.cxx",
+            --                 "**/tmp"
+            --             }
+            --         }
+            --     },
+            -- })
+            --
+            -- ------------------------------------------------
+            -- -- JDTLS
+            -- ------------------------------------------------
+            -- vim.lsp.config("jdtls", {
+            --     capabilities = capabilities,
+            --     on_attach = on_attach,
+            -- })
         end,
     },
     -- Auto complete
