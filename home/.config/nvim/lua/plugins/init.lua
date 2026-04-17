@@ -406,7 +406,7 @@ return {
             "MunifTanjim/nui.nvim",
         },
         opts = {
-            -- configuration goes here
+            lang = 'kotlin'
         },
     },
     -- UFO Fold
