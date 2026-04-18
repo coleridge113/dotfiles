@@ -9,6 +9,14 @@ function main() {
     shift
 
     case "$cmd" in
+        on)
+            bt_power_on
+            ;;
+
+        off)
+            bt_power_off
+            ;;
+
         connect|con)
             bt_connect "$@"
             ;;
@@ -176,6 +184,22 @@ function bt_is_connected() {
     else
         output="$(bluetoothctl info "$mac")"
         [[ $output == *"Connected: yes"* ]]
+    fi
+}
+
+function bt_power_on() {
+    if [[ $OS == "Darwin" ]]; then
+        blueutil --power 1
+    else
+        bluetoothctl power on
+    fi
+}
+
+function bt_power_off() {
+    if [[ $OS == "Darwin" ]]; then
+        blueutil --power 0
+    else
+        bluetoothctl power off
     fi
 }
 
