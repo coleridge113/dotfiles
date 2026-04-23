@@ -36,7 +36,7 @@ alias build_cs1='gradle_build_notify assembleCs_stg_1_Debug'
 alias run_cs='run_gradle_variant installCs_stg_Debug'
 alias deb_cs='run_gradle_variant_debug installCs_stg_Debug'
 
-function gradle_build_notify () {
+function gradle_build_notify() {
 
     local task="$1"
     shift
@@ -222,11 +222,9 @@ function status() {
 alias status="status"
 
 function assign() {
-    # Ensure variables are local to prevent side effects
     local JOB_ORDER="$1"
     local RESPONSE
     
-    # Using double quotes for the data block to allow variable expansion
     RESPONSE=$(curl -so /dev/null -w "%{http_code}" "https://api-staging.metromart.com/api/v1/consignments?include=job-order.checkout,user" \
         -X POST \
         -H "accept: application/vnd.api+json" \
