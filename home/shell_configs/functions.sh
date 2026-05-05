@@ -87,10 +87,10 @@ function studio() {
     local STUDIO_BIN
 
     STUDIO_BIN=$(
-        command -v studio \
-        || command -v android-studio \
+        command -v android-studio \
         || command -v android-studio.sh
     )
+    echo "Running $STUDIO_BIN"
 
     if [[ -z "$STUDIO_BIN" ]]; then
         echo "❌ Android Studio binary not found"
