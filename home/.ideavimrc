@@ -3,6 +3,7 @@ set number
 set relativenumber
 set clipboard=unnamedplus
 set ignorecase
+set NERDTree
 
 nnoremap <leader>ic :set ignorecase!<CR>
 nnoremap <leader>q :q<CR>
@@ -22,9 +23,9 @@ call plug#end()
 
 " Disable the original destructive 's' and 'S' behaviors
 " (s = delete-char + insert, S = replace whole line)
-nnoremap s <Nop>
-nnoremap S <Nop>
-xnoremap s <Nop>
+" nnoremap s <Nop>
+" nnoremap S <Nop>
+" xnoremap s <Nop>
 
 " Remap to vim-surround style operations
 " Normal-mode: s{motion}{char}  -> like ys{motion}{char}
@@ -56,3 +57,6 @@ set ideavimsupport+=dialog
 
 " Set quickscope
 set quickscope
+
+nmap s <Action>(flash.search)
+xmap s <Action>(flash.search)
