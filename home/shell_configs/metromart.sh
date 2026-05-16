@@ -119,64 +119,72 @@ function gradle_build_notify() {
     #######################################
     # Run build
     #######################################
-    if JAVA_HOME="$j_home" ./gradlew clean "$task"; then
+    if JAVA_HOME="$j_home" ./gradlew clean "$task" --no-daemon; then
 
-    #######################################
-    # success notification
-    #######################################
-    if [[ "$os" == "Darwin" ]]; then
-        osascript -e \
-            "display notification \"$task finished\" with title \"✅ Build Success\""
+        #######################################
+        # success notification
+        #######################################
+        if [[ "$os" == "Darwin" ]]; then
+            osascript -e \
+                "display notification \"$task finished\" with title \"✅ Build Success\""
+        else
+            command -v notify-send >/dev/null 2>&1 \
+                && notify-send "✅ Build Success" "$task finished" \
+                || echo "✅ Build Success: $task finished"
+        fi
+
+
+        #######################################
+        # open apk folder
+        #######################################
+        if $should_open; then
+
+            local apk_path
+
+            apk_path=$(
+                find . -path "*/outputs/apk/*" -name "*.apk" -print0 \
+                    | xargs -0 ls -t 2>/dev/null \
+                    | head -n 1
+                )
+
+                if [[ -n "$apk_path" ]]; then
+
+                    echo
+                    echo "📦 Opening:"
+                    echo "$apk_path"
+
+                    open "$(dirname "$apk_path")"
+
+                else
+                    echo "⚠️ APK not found"
+                fi
+
+        fi
+
     else
-        command -v notify-send >/dev/null 2>&1 \
-            && notify-send "✅ Build Success" "$task finished" \
-            || echo "✅ Build Success: $task finished"
-    fi
 
-
-    #######################################
-    # open apk folder
-    #######################################
-    if $should_open; then
-
-        local apk_path
-
-        apk_path=$(
-            find . -path "*/outputs/apk/*" -name "*.apk" -print0 \
-                | xargs -0 ls -t 2>/dev/null \
-                | head -n 1
-            )
-
-            if [[ -n "$apk_path" ]]; then
-
-                echo
-                echo "📦 Opening:"
-                echo "$apk_path"
-
-                open "$(dirname "$apk_path")"
-
-            else
-                echo "⚠️ APK not found"
-            fi
+        #######################################
+        # failure notification
+        #######################################
+        if [[ "$os" == "Darwin" ]]; then
+            osascript -e \
+                "display notification \"$task failed\" with title \"❌ Build Failed\""
+        else
+            command -v notify-send >/dev/null 2>&1 \
+                && notify-send "❌ Build Failed" "$task failed" \
+                || echo "❌ Build Failed: $task failed"
+        fi
 
     fi
-
-
-else
-
-#######################################
-# failure notification
-#######################################
-if [[ "$os" == "Darwin" ]]; then
-    osascript -e \
-        "display notification \"$task failed\" with title \"❌ Build Failed\""
-else
-    command -v notify-send >/dev/null 2>&1 \
-        && notify-send "❌ Build Failed" "$task failed" \
-        || echo "❌ Build Failed: $task failed"
-fi
-
-    fi
+    #
+    #
+    # #######################################
+    # # clean up gradle task
+    # #######################################
+    #
+    # echo
+    # echo "Cleaning up gradle task..."
+    # (sleep 3 && ./gradlew --stop) &
 }
 
 function register_token() {
