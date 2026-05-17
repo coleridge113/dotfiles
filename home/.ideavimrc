@@ -4,6 +4,7 @@ set relativenumber
 set clipboard=unnamedplus
 set ignorecase
 set NERDTree
+set mini-ai
 
 nnoremap <leader>ic :set ignorecase!<CR>
 nnoremap <leader>q :q<CR>
