@@ -88,7 +88,8 @@ function studio() {
 
     STUDIO_BIN=$(
         command -v android-studio \
-        || command -v android-studio.sh
+        || command -v android-studio.sh \
+        || command -v studio
     )
     echo "Running $STUDIO_BIN"
 
