@@ -2,21 +2,23 @@ return {
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        version = false, -- Important: forces the latest main branch, avoiding old buggy releases
         build = ":TSUpdate",
+        event = { "BufReadPost", "BufNewFile" },
         config = function()
-            local configs = require("nvim-treesitter.config")
-
-            configs.setup({
+            require("nvim-treesitter.config").setup({
                 ensure_installed = {
                     "lua", "vim", "vimdoc", "query",
                     "kotlin", "bash", "json", "yaml",
-                    "markdown", "markdown_inline", "javascript"
+                    "markdown", "markdown_inline",
+                    "javascript", "typescript", "tsx"
                 },
-                highlight = { 
-                    enable = true, 
-                    additional_vim_regex_highlighting = false 
+                highlight = {
+                    enable = true,
                 },
-                indent = { enable = true },
+                indent = {
+                    enable = true, -- This is required for '=' to work on JSX/TSX
+                },
             })
         end,
     },
@@ -485,5 +487,32 @@ return {
             { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
             { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
         },
+    },
+    -- Prettier
+    {
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        keys = {
+            {
+                -- Overrides your '=' key (or use a different shortcut like '<leader>f')
+                -- to use Prettier for formatting instead of Neovim's built-in engine
+                "=",
+                function()
+                    require("conform").format({ async = true, lsp_fallback = true })
+                end,
+                mode = "v", -- Works in visual mode (highlighting)
+                desc = "Format selection with Prettier",
+            },
+        },
+        opts = {
+            formatters_by_ft = {
+                -- Tell Neovim to use Prettier for all JS/TS/React files
+                javascript = { "prettier" },
+                typescript = { "prettier" },
+                javascriptreact = { "prettier" },
+                typescriptreact = { "prettier" },
+            },
+        }
     }
 }

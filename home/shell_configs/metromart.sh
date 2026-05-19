@@ -202,9 +202,9 @@ function register_token() {
     TOKEN="$2"
 
     case "$TYPE" in
-      web) export WEB_TOKEN="$TOKEN" ;;
-      as)  export SHOPPER_TOKEN="$TOKEN" ;;
-      ar)  export RIDER_TOKEN="$TOKEN" ;;
+      w|web) export WEB_TOKEN="$TOKEN" ;;
+      s|shop|shopper)  export SHOPPER_TOKEN="$TOKEN" ;;
+      r|run|runner)  export RIDER_TOKEN="$TOKEN" ;;
       *)   echo "Unknown type: $TYPE" ;;
     esac
 }
