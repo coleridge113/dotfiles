@@ -163,7 +163,9 @@ function gradle_build_notify() {
                     echo "📦 Opening:"
                     echo "$apk_path"
 
-                    open "$(dirname "$apk_path")"
+                    local dir_path="$(dirname "$apk_path")"
+
+                    open "$dir_path" || naut "$dir_path"
 
                 else
                     echo "⚠️ APK not found"
