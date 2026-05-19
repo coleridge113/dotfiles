@@ -38,6 +38,7 @@ alias ghostty='app "Ghostty" ghostty'
 alias spotify='app "Spotify" spotify'
 alias steam='app "Steam" steam'
 alias bitwarden='app "Bitwarden" bitwarden'
+alias naut='app "Nautilus" nautilus'
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'
