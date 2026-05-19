@@ -56,6 +56,16 @@ function gradle_build_notify() {
         esac
     done
 
+    #######################################
+    # Extract project (rs or cs)
+    #######################################
+    local project=""
+    if [[ "$task" =~ ^assemble([A-Z][a-z0-9]*) ]]; then
+        # ${variable,,} converts the captured group (Rs or Cs) to lowercase
+        project="${BASH_REMATCH[1],,}"
+    else
+        project="unknown"
+    fi
 
     #######################################
     # Detect OS
@@ -107,7 +117,7 @@ function gradle_build_notify() {
     #######################################
     # Move to project folder
     #######################################
-    cd "$METROMART/projects/android-cs-java" || return 1
+    cd "$METROMART/projects/android-$project-java" || return 1
 
 
     #######################################
@@ -225,7 +235,7 @@ function status() {
         -H "X-Client-Platform: Android" \
         -H "X-Client-Version: 160" \
         -d "{\"data\":{\"attributes\":{\"delivery-status\":\"$STATUS\"}}}" \
-        "https://api-staging.metromart.com/api/v1/job-orders/$JOB_ORDER" -L)
+        "https://api-staging1.metromart.com/api/v1/job-orders/$JOB_ORDER" -L)
 
     echo "Response code: $RESPONSE"
 }
