@@ -188,15 +188,6 @@ function gradle_build_notify() {
         fi
 
     fi
-    #
-    #
-    # #######################################
-    # # clean up gradle task
-    # #######################################
-    #
-    # echo
-    # echo "Cleaning up gradle task..."
-    # (sleep 3 && ./gradlew --stop) &
 }
 
 function register_token() {
