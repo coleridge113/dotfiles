@@ -50,7 +50,7 @@ function gradle_build_notify() {
 
     for arg in "$@"; do
         case "$arg" in
-            --open|-op)
+            --open|-o)
                 should_open=true
                 ;;
         esac
