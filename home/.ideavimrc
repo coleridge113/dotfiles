@@ -5,6 +5,7 @@ set clipboard=unnamedplus
 set ignorecase
 set NERDTree
 set mini-ai
+set anyobject
 
 nnoremap <leader>ic :set ignorecase!<CR>
 nnoremap <leader>q :q<CR>
