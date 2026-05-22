@@ -25,6 +25,25 @@ else
     echo "Done. Reload your shell or run: source ~/.bashrc"
 fi
 
+# BREW
+if [[ "$(uname)" == "Darwin" ]]; then
+    if ! command -v brew &> /dev/null; then
+        echo "Homebrew not found. Please install with:"
+        echo "/bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)'"
+        exit 1
+    fi
+
+    local brewfile="$DOT_HOME/brew/Brewfile"
+    if [ -f "$brewfile"]; then
+        echo "Brewfile found."
+        echo "Installing dependencies..."
+        brew bundle --file="$brewfile"
+    else
+        echo "Brewfile not found..."
+        exit 1
+    fi
+fi
+
 # TMUX
 if [ -f "$DOT_HOME/.tmux.conf" ]; then
     ln -sfn "$DOT_HOME/.tmux.conf" "$HOME/.tmux.conf"
