@@ -216,3 +216,16 @@ function y() {
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+function copy() {
+    if command -v pbcopy >/dev/null 2>&1; then
+        pbcopy
+    elif command -v xclip >/dev/null 2>&1; then
+        xclip -selection clipboard
+    elif command -v wl-copy >/dev/null 2>&1; then
+        wl-copy
+    else
+        echo "Error: No clipboard utility found (pbcopy, xclip, or wl-copy)." >&2
+        return 1
+    fi
+}
