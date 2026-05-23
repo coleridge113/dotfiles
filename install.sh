@@ -3,11 +3,14 @@
 DOT_HOME="$HOME/.dotfiles/home"
 CONFIG_DIR="$DOT_HOME/shell_configs"
 BASHRC="$HOME/.bashrc"
+ZSHRC="$HOME/.zshrc"
 SOURCE_BLOCK="if [ -d \"$CONFIG_DIR\" ]; then
 for file in \"$CONFIG_DIR/*.sh; do
     [ -r \"\$file\" ] && source \"\$file\"
 done
 fi"
+
+OS="$(uname)"
 
 if [ ! -d "$CONFIG_DIR" ]; then
     echo "Please clone your dotfiles first!"
@@ -17,16 +20,26 @@ if [ ! -d "$CONFIG_DIR" ]; then
 fi
 
 # Check if .bashrc already contains the source block
-if grep -Fq "$CONFIG_DIR" "$BASHRC"; then
-    echo ".bashrc already sources $CONFIG_DIR/*.sh"
+if [[ $OS == "Darwin" ]]; then
+    if grep -Fq "$CONFIG_DIR" "$ZSHRC"; then
+        echo ".zshrc already sources $CONFIG_DIR/*.sh"
+    else
+        echo "Appending source block to .zshrc..."
+        echo -e "\n# Load custom shell configs\n$SOURCE_BLOCK" >> "$ZSHRC"
+        echo "Done. Reload your shell or run: source ~/.zshrc"
+    fi
 else
-    echo "Appending source block to .bashrc..."
-    echo -e "\n# Load custom shell configs\n$SOURCE_BLOCK" >> "$BASHRC"
-    echo "Done. Reload your shell or run: source ~/.bashrc"
+    if grep -Fq "$CONFIG_DIR" "$BASHRC"; then
+        echo ".bashrc already sources $CONFIG_DIR/*.sh"
+    else
+        echo "Appending source block to .bashrc..."
+        echo -e "\n# Load custom shell configs\n$SOURCE_BLOCK" >> "$BASHRC"
+        echo "Done. Reload your shell or run: source ~/.bashrc"
+    fi
 fi
 
 # BREW
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ $OS == "Darwin" ]]; then
     if ! command -v brew &> /dev/null; then
         echo "Homebrew not found. Please install with:"
         echo "/bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)'"
@@ -42,6 +55,11 @@ if [[ "$(uname)" == "Darwin" ]]; then
         echo "Brewfile not found..."
         exit 1
     fi
+fi
+
+# ~/.local
+if [ ! -d "$HOME/.local/bin" ]; then
+    mkdir -p "$HOME/.local/bin"
 fi
 
 # TMUX
@@ -109,9 +127,9 @@ if [ -d "$DOT_HOME/.config/starship" ]; then
     ln -sfn "$DOT_HOME/.config/starship/starship.toml" "$HOME/.config/starship.toml"
     echo "Linked starship"
 
-    STARSHIP_EVAL='eval "$(starship init bash)"'
 
     if [ -f "$HOME/.bashrc" ]; then
+    STARSHIP_EVAL='eval "$(starship init bash)"'
         if ! grep -q "starship init" "$HOME/.bashrc"; then
             echo "$STARSHIP_EVAL" >> "$HOME/.bashrc"
             echo "Added starship initialization to .bashrc"
@@ -120,9 +138,9 @@ if [ -d "$DOT_HOME/.config/starship" ]; then
         fi
 
     elif [ -f "$HOME/.zshrc" ]; then
-        ZSH_EVAL='eval "$(starship init zsh)"'
+    STARSHIP_EVAL='eval "$(starship init zsh)"'
         if ! grep -q "starship init" "$HOME/.zshrc"; then
-            echo "$ZSH_EVAL" >> "$HOME/.zshrc"
+            echo "$STARSHIP_EVAL" >> "$HOME/.zshrc"
             echo "Added starship initialization to .zshrc"
         else
             echo "Starship init already exists in .zshrc, skipping."
@@ -156,3 +174,7 @@ if [ -d "$DOT_HOME/.config/yazi" ]; then
     echo "Linked yazi"
 fi
 
+# Zoxide
+if command -v zoxide > /dev/null; then
+    echo "eval '$(zoxide init zsh)'"
+fi
