@@ -106,8 +106,30 @@ fi
 
 # Starship
 if [ -d "$DOT_HOME/.config/starship" ]; then
-    ln -sfn "$DOT_HOME/.config/starship/starship.toml" "$HOME/.config/"
+    ln -sfn "$DOT_HOME/.config/starship/starship.toml" "$HOME/.config/starship.toml"
     echo "Linked starship"
+
+    STARSHIP_EVAL='eval "$(starship init bash)"'
+
+    if [ -f "$HOME/.bashrc" ]; then
+        if ! grep -q "starship init" "$HOME/.bashrc"; then
+            echo "$STARSHIP_EVAL" >> "$HOME/.bashrc"
+            echo "Added starship initialization to .bashrc"
+        else
+            echo "Starship init already exists in .bashrc, skipping."
+        fi
+
+    elif [ -f "$HOME/.zshrc" ]; then
+        ZSH_EVAL='eval "$(starship init zsh)"'
+        if ! grep -q "starship init" "$HOME/.zshrc"; then
+            echo "$ZSH_EVAL" >> "$HOME/.zshrc"
+            echo "Added starship initialization to .zshrc"
+        else
+            echo "Starship init already exists in .zshrc, skipping."
+        fi
+    else
+        echo "bashrc or zshrc not found..."
+    fi
 fi
 
 # TMUX Plugin
