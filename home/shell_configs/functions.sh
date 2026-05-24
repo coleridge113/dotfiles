@@ -126,22 +126,23 @@ function gc() {
 function select-java() {
     local os
     os="$(uname)"
-
-    echo "Available Java Versions:"
-    echo
+    local version="$1" # Capture the immediate argument if provided
 
     #######################################
     # macOS
     #######################################
     if [[ "$os" == "Darwin" ]]; then
-        /usr/libexec/java_home -V 2>&1 \
-            | awk -F '"' '/version/ {print $2}' \
-            | sort -u
-
-        echo
-
-        printf "Enter version (17, 21, etc): "
-        read version
+        # If no argument was passed, show the menu and prompt the user
+        if [[ -z "$version" ]]; then
+            echo "Available Java Versions:"
+            echo
+            /usr/libexec/java_home -V 2>&1 \
+                | awk -F '"' '/version/ {print $2}' \
+                | sort -u
+            echo
+            printf "Enter version (17, 21, etc): "
+            read -r version
+        fi
 
         if [[ -n "$version" ]]; then
             JAVA_HOME=$(/usr/libexec/java_home -v "$version" 2>/dev/null)
@@ -158,22 +159,26 @@ function select-java() {
             return 1
         fi
 
-        # Extract versions from directory names
-        ls "$jvm_dir" \
-            | grep -Ei 'jdk|java|temurin|zulu' \
-            | sed -E 's/.*([0-9]{2}).*/\1/' \
-            | sort -u
-
-        echo
-
-        printf "Enter version (17, 21, etc): "
-        read version
+        # If no argument was passed, show the menu and prompt the user
+        if [[ -z "$version" ]]; then
+            echo "Available Java Versions:"
+            echo
+            # Extract versions from directory names
+            ls "$jvm_dir" \
+                | grep -Ei 'jdk|java|temurin|zulu' \
+                | sed -E 's/.*([0-9]{2}).*/\1/' \
+                | sort -u
+            echo
+            printf "Enter version (17, 21, etc): "
+            read -r version
+        fi
 
         if [[ -n "$version" ]]; then
+            # On Arch, we want to match something like 'java-21-openjdk' or 'jdk-21' safely
             JAVA_HOME=$(
-                find "$jvm_dir" -maxdepth 1 -type d \
-                | grep -E "$version" \
-                | head -n1
+                find "$jvm_dir" -maxdepth 1 -mindepth 1 -type d \
+                    | grep -E "(^|[^0-9])$version([^0-9]|$)" \
+                    | head -n1
             )
         fi
     fi
@@ -182,12 +187,18 @@ function select-java() {
     # Apply selection
     #######################################
     if [[ -z "$JAVA_HOME" ]]; then
-        echo "❌ Java $version not found"
+        echo "❌ Java '$version' not found"
         return 1
     fi
 
     export JAVA_HOME
+    # Remove previous JAVA_HOME/bin from PATH if you switch multiple times in one session
+    if [[ -n "$OLD_JAVA_HOME" ]]; then
+        PATH=$(echo "$PATH" | sed "s|${OLD_JAVA_HOME}/bin:||g")
+    fi
+    
     export PATH="$JAVA_HOME/bin:$PATH"
+    export OLD_JAVA_HOME="$JAVA_HOME" # Track it for clean swapping later
 
     echo
     echo "☕ Switched to:"
