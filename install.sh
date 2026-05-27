@@ -178,3 +178,9 @@ fi
 if command -v zoxide > /dev/null; then
     echo "eval '$(zoxide init zsh)'"
 fi
+
+# Caelestia
+if [ -d "$DOT_HOME/.config/caelestia" ]; then
+    ln -sfn "$DOT_HOME/.config/caelestia" "$HOME/.config/"
+    echo "Linked caelestia"
+fi
