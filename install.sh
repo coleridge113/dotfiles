@@ -104,12 +104,6 @@ if [ -f "$DOT_HOME/.config/btop.conf" ]; then
     echo "Linked btop.conf"
 fi
 
-# Hyprland
-if [ -d "$DOT_HOME/.config/hypr" ]; then
-    ln -sfn "$DOT_HOME/.config/hypr" "$HOME/.config/"
-    echo "Linked Hyprland"
-fi
-
 # Waybar
 if [ -d "$DOT_HOME/.config/waybar" ]; then
     ln -sfn "$DOT_HOME/.config/waybar" "$HOME/.config/"
