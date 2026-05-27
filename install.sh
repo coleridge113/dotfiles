@@ -178,3 +178,9 @@ if [ -d "$DOT_HOME/.config/caelestia" ]; then
     ln -sfn "$DOT_HOME/.config/caelestia" "$HOME/.config/"
     echo "Linked caelestia"
 fi
+
+# Flameshot
+if [ -d "$DOT_HOME/.config/flameshot" ]; then
+    ln -sfn "$DOT_HOME/.config/flameshot" "$HOME/.config/"
+    echo "Linked flameshot"
+fi
