@@ -24,7 +24,8 @@ return {
     },
     -- Git
     {
-        "lewis6991/gitsigns.nvim", config = function()
+        "lewis6991/gitsigns.nvim",
+        config = function()
             vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { italic = true, link = "Comment" })
             require("gitsigns").setup({
                 current_line_blame = true, -- inline blame for the current line
@@ -38,7 +39,8 @@ return {
             })
             local gs = require("gitsigns")
             vim.keymap.set("n", "<leader>gb", gs.toggle_current_line_blame, { desc = "Git: toggle inline blame" })
-            vim.keymap.set("n", "<leader>gl", function() gs.blame_line({ full = true }) end, { desc = "Git: blame line (full)" })
+            vim.keymap.set("n", "<leader>gl", function() gs.blame_line({ full = true }) end,
+                { desc = "Git: blame line (full)" })
         end
     },
     -- UI/UX
@@ -212,7 +214,7 @@ return {
                         visible = true,        -- show filtered items, but with different style
                         hide_dotfiles = false, -- do NOT hide dotfiles
                         hide_gitignored = false,
-                        hide_hidden = true,   -- important on Linux
+                        hide_hidden = true,    -- important on Linux
                         hide_by_name = {},
                         hide_by_pattern = {},
                     },
@@ -305,7 +307,7 @@ return {
         event = "BufReadPre",
         config = function()
             require("colorizer").setup({
-                css = true, -- enable all CSS features
+                css = true,          -- enable all CSS features
                 mode = "background", -- set mode to background
             })
         end,
@@ -352,7 +354,7 @@ return {
                 exclude = { 'markdown', 'help', 'text', 'rst' },
                 minlevel = 2,
             })
-        vim.cmd.highlight('IndentLine guifg=#404040')  -- Add this line here
+            vim.cmd.highlight('IndentLine guifg=#404040') -- Add this line here
         end,
     },
     -- Markdown Render
@@ -364,7 +366,7 @@ return {
         },
         config = function()
             require('render-markdown').setup({
-                completions = { lsp = { enabled = true }},
+                completions = { lsp = { enabled = true } },
                 render_modes = true,
                 heading = {
                     width = 'block',
@@ -425,11 +427,11 @@ return {
             vim.o.foldlevelstart = 99
             vim.o.foldenable = true
             -- Force manual so UFO can manage folds itself
-            vim.o.foldmethod = 'manual' 
+            vim.o.foldmethod = 'manual'
 
             require("ufo").setup({
                 provider_selector = function(bufnr, filetype, buftype)
-                    -- If you want specific overrides, keep them, 
+                    -- If you want specific overrides, keep them,
                     -- otherwise treesitter is usually enough.
                     return { "treesitter", "indent" }
                 end,
@@ -479,13 +481,20 @@ return {
         "folke/flash.nvim",
         event = "VeryLazy",
         ---@type Flash.Config
-        opts = {},
+        opts = {
+            modes = {
+                -- This disables Flash from taking over f, F, t, T, and consequently hijacking ; and ,
+                char = {
+                    enabled = false,
+                },
+            },
+        },
         keys = {
-            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-            { "S", mode = { "n", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-            { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-            { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-            { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "o" },      function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
         },
     },
     -- Prettier
@@ -497,7 +506,7 @@ return {
             {
                 -- Overrides your '=' key (or use a different shortcut like '<leader>f')
                 -- to use Prettier for formatting instead of Neovim's built-in engine
-                "=",
+                "<leader>f",
                 function()
                     require("conform").format({ async = true, lsp_fallback = true })
                 end,
