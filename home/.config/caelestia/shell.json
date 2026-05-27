@@ -1,0 +1,46 @@
+{
+    "appearance": {
+        "transparency": {
+            "enabled": false
+        }
+    },
+    "background": {
+        "desktopClock": {
+            "background": {
+                "enabled": false
+            },
+            "enabled": true,
+            "position": "top-center",
+            "shadow": {
+                "enabled": true
+            }
+        },
+        "visualiser": {
+            "autoHide": true,
+            "enabled": false
+        }
+    },
+    "bar": {
+        "clock": {
+            "background": true,
+            "showDate": true
+        },
+        "status": {
+            "showAudio": false,
+            "showLockStatus": true,
+            "showMicrophone": false
+        },
+        "tray": {
+            "background": true,
+            "compact": false,
+            "recolour": false
+        }
+    },
+    "dashboard": {
+        "enabled": true
+    },
+    "launcher": {
+        "showOnHover": true,
+        "vimKeybinds": true
+    }
+}
