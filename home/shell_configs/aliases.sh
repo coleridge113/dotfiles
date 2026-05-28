@@ -65,6 +65,8 @@ alias lg='lazygit'
 # Script aliases
 alias leet_login='$DOT_SCRIPTS/leet_login.sh'
 alias dmg_install='$DOT_SCRIPTS/dmg_install.sh'
+alias run_cs='$DOT_SCRIPTS/android_run.sh assembleCs_stg_Debug'
+alias run_rs='$DOT_SCRIPTS/android_run.sh assembleRs_stg_Debug'
 
 # Navigation aliases
 alias books='cd ~/Documents/books'
