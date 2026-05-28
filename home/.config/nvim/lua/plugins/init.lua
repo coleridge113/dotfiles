@@ -574,7 +574,9 @@ return {
             local discovered_themes = {}
 
             -- Explicit overrides for multi-flavor edge cases (Safe from startup timing bugs)
+            -- Inside your Themery configuration block
             local multi_flavor_overrides = {
+                ["catppuccin"]   = { "catppuccin-latte", "catppuccin-frappe", "catppuccin-macchiato", "catppuccin-mocha" },
                 ["github-theme"] = { "github_dark", "github_light", "github_dark_dimmed" },
                 ["tokyonight"]   = { "tokyonight-storm", "tokyonight-night", "tokyonight-moon", "tokyonight-day" },
                 ["rose-pine"]    = { "rose-pine", "rose-pine-moon", "rose-pine-dawn" },

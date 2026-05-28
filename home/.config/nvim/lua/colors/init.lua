@@ -38,4 +38,5 @@ return {
     load_theme("sonokai", "colors.themes.sonokai"),
     load_theme("nord", "colors.themes.nord"),
     load_theme("everforest", "colors.themes.everforest"),
+    load_theme("catppuccin", "colors.themes.catppuccin")
 }
