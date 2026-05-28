@@ -563,4 +563,77 @@ return {
             })
         end,
     },
+    -- Themery Plugin Configuration
+    -- Themery Plugin Configuration
+    -- Themery Plugin Configuration
+    {
+        "zaldih/themery.nvim",
+        lazy = false,
+        config = function()
+            local success, color_specs = pcall(require, "colors")
+            local discovered_themes = {}
+
+            -- Explicit overrides for multi-flavor edge cases (Safe from startup timing bugs)
+            local multi_flavor_overrides = {
+                ["github-theme"] = { "github_dark", "github_light", "github_dark_dimmed" },
+                ["tokyonight"]   = { "tokyonight-storm", "tokyonight-night", "tokyonight-moon", "tokyonight-day" },
+                ["rose-pine"]    = { "rose-pine", "rose-pine-moon", "rose-pine-dawn" },
+                ["kanagawa"]     = { "kanagawa-wave", "kanagawa-dragon", "kanagawa-lotus" },
+            }
+
+            if success and type(color_specs) == "table" then
+                for _, spec in ipairs(color_specs) do
+                    -- Grab the identifier string name
+                    local c_name = spec.name or (spec[1] and spec[1]:match(".*/(.*)")) or ""
+                    c_name = c_name:gsub("%.nvim$", ""):gsub("%.lua$", "")
+
+                    if c_name ~= "" then
+                        -- Check if it's explicitly defined in our multi-flavor dictionary first
+                        if multi_flavor_overrides[c_name] then
+                            for _, flavor in ipairs(multi_flavor_overrides[c_name]) do
+                                local display_name = flavor:gsub("-", " "):gsub("_", " "):gsub("(%l)(%w*)", function(a, b) 
+                                    return string.upper(a) .. b 
+                                end)
+
+                                table.insert(discovered_themes, {
+                                    name = display_name,
+                                    colorscheme = flavor,
+                                    module_source = c_name
+                                })
+                            end
+                        else
+                            -- Otherwise, let it dynamically fall through to standard auto-detection
+                            local display_name = c_name:gsub("^%l", string.upper):gsub("-", " ")
+                            table.insert(discovered_themes, {
+                                name = display_name,
+                                colorscheme = c_name,
+                                module_source = c_name
+                            })
+                        end
+                    end
+                end
+            end
+
+            if #discovered_themes == 0 then
+                discovered_themes = { { name = "Default", colorscheme = "default" } }
+            end
+
+            require("themery").setup({
+                themes = discovered_themes,
+                livePreview = true,
+
+                onChanged = function(theme)
+                    local source_file = theme.module_source or theme.colorscheme
+                    local target_module = "colors.themes." .. source_file
+
+                    if package.searchpath(target_module, package.path) then
+                        package.loaded[target_module] = nil
+                        pcall(require, target_module)
+                    end
+                end,
+            })
+
+            vim.keymap.set("n", "<leader>th", "<cmd>Themery<cr>", { desc = "Themery: Switch Theme" })
+        end
+    },
 }

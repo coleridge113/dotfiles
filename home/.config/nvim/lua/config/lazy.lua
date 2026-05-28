@@ -18,14 +18,16 @@ vim.opt.rtp:prepend(lazypath)
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- import your plugins
+    -- 1. Import your standard plugins folder
     { import = "plugins" },
-    { import = "colors" },
+
+    -- 2. Directly load your custom theme orchestration module.
+    --    We use require() here instead of an import string so Lazy 
+    --    doesn't crash on your custom procedural Lua code.
+    require("colors"),
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
+  
   install = { colorscheme = { "habamax" } },
-  -- automatically check for plugin updates
   checker = { enabled = false },
   rocks = { 
       enabled = false,

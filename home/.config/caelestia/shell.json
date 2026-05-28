@@ -37,7 +37,8 @@
         }
     },
     "dashboard": {
-        "enabled": true
+        "enabled": true,
+        "showPerformance": true
     },
     "launcher": {
         "showOnHover": true,

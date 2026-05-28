@@ -40,6 +40,5 @@ return {
         opts.variableStyle  = { italic = opts.italic.variables }
 
         require("kanagawa").setup(opts)
-        vim.cmd("colorscheme kanagawa-dragon") -- try: kanagawa-dragon, kanagawa-lotus
     end,
 }

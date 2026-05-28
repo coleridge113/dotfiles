@@ -40,9 +40,6 @@ return {
       vim.g.sonokai_disable_italic_type      = opts.italic.types      and 0 or 1
       vim.g.sonokai_disable_italic_function  = opts.italic.functions  and 0 or 1
       vim.g.sonokai_disable_italic_variable  = opts.italic.variables  and 0 or 1
-
-      -- Apply the colorscheme
-      vim.cmd("colorscheme sonokai")
     end,
   },
 }
