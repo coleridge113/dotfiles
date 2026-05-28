@@ -240,3 +240,11 @@ function copy() {
         return 1
     fi
 }
+
+function clean_build() {
+    ./gradlew clean assembleDebug "$1"
+}
+
+function wdb() {
+    adb pair "192.168.100.74:$1"
+}
