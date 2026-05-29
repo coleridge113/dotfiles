@@ -55,6 +55,7 @@ alias leet='nvim leetcode.nvim'
 alias nvk='nvim ~/.config/karabiner'
 alias nvc='nvim ~/.config/caelestia'
 alias nvl='nvim ~/.local/state/nvim/lsp.log'
+alias nvs='nvim ~/.config/starship.toml'
 
 # Git aliases
 alias gs='git status'
