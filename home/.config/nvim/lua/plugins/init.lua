@@ -86,7 +86,8 @@ return {
             require("mason").setup()
 
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls" },
+                -- 1. CHANGED: Use the official lspconfig name
+                ensure_installed = { "lua_ls", "kotlin_language_server" },
             })
 
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -114,16 +115,12 @@ return {
             vim.lsp.enable("ts_ls")
 
             ------------------------------------------------
-            -- JetBrains Kotlin LSP
+            -- Kotlin Language Server
             ------------------------------------------------
-            vim.lsp.config("jetbrains_kotlin_lsp", {
-                -- Explicitly set the name and binary command
-                name = "jetbrains_kotlin_lsp",
-                cmd = { "kotlin-lsp" },
+            -- 2 & 3. CHANGED: Match the lspconfig name so defaults are applied
+            vim.lsp.config("kotlin_language_server", {
                 capabilities = capabilities,
                 on_attach = on_attach,
-                
-                -- JetBrains LSP looks for a specific directory layout
                 root_dir = function(filename)
                     return vim.fs.root(filename, { 
                         "settings.gradle", 
@@ -134,11 +131,8 @@ return {
                         ".git" 
                     })
                 end,
-                
-                -- Force the server to attach to standard Kotlin files
-                filetypes = { "kotlin" },
             })
-            vim.lsp.enable("jetbrains_kotlin_lsp")
+            vim.lsp.enable("kotlin_language_server")
         end,
     },
     -- Auto complete
