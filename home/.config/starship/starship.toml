@@ -19,7 +19,8 @@ $haskell\
 $python\
 $docker_context\
 $time\
-$line_break$character"""
+$line_break$character\
+"""
 
 # Using our clean, universal palette definition
 palette = 'theme_neutral'
@@ -31,7 +32,7 @@ color_blue = '#89b4fa' # Soft accent color (for active directory)
 [os]
 disabled = false
 style = "bold fg:color_blue"
-format = "[$symbol]($style) "
+format = " [$symbol]($style) "
 
 [os.symbols]
 Arch = "󰣇"
