@@ -3,29 +3,42 @@
 function android_run() {
     local task="$1"
     
-    # 1. Build the APK
-    echo "Building: $task"
-    ./gradlew clean "$task" --no-daemon || { echo "Build failed!"; return 1; }
+    if [ -z "$task" ]; then
+        echo "Error: Please specify a task (e.g., assembleDebug)"
+        return 1
+    fi
 
-    # 2. Find the newly generated APK
-    APK_PATH=$(find app/build/outputs/apk/ -name "*.apk" -print0 | xargs -0 ls -t | head -n 1)
+    # 1. Build the APK incrementally (REMOVED 'clean')
+    echo "Building: $task"
+    ./gradlew "$task" --no-daemon || { echo "Build failed!"; return 1; }
+
+    # Extract the build variant type (e.g., "assembleDebug" -> "debug", "assembleRelease" -> "release")
+    # This handles flavor variants safely so we search the correct directory.
+    local variant=$(echo "$task" | sed 's/assemble//' | tr '[:upper:]' '[:lower:]')
+
+    # 2. Target the specific build variant folder directly
+    local apk_dir="app/build/outputs/apk/$variant"
+    
+    # Fallback to general apk directory if the specific variant folder structure doesn't match
+    if [ ! -d "$apk_dir" ]; then
+        apk_dir="app/build/outputs/apk"
+    fi
+
+    APK_PATH=$(find "$apk_dir" -name "*.apk" -print0 2>/dev/null | xargs -0 ls -t 2>/dev/null | head -n 1)
 
     if [ -z "$APK_PATH" ] || [ ! -f "$APK_PATH" ]; then
-        echo "Error: Could not find APK."
+        echo "Error: Could not find APK in $apk_dir."
         return 1
     fi
     
-    echo "Found APK: $APK_PATH"
+    echo "Using APK: $APK_PATH"
 
     # 3. Read the EXACT Application ID from Gradle's output-metadata.json
-    # This file lives in the exact same folder as the APK
     JSON_PATH="$(dirname "$APK_PATH")/output-metadata.json"
     
     if [ -f "$JSON_PATH" ]; then
-        # Parse the JSON for the final, true applicationId (including any flavor suffixes)
         PACKAGE_NAME=$(grep -o '"applicationId": *"[^"]*"' "$JSON_PATH" | head -1 | cut -d'"' -f4)
     else
-        # Fallback just in case
         PACKAGE_NAME=$(awk -F'["'\'']' '/applicationId|namespace/ {print $2; exit}' app/build.gradle | tr -d '\r')
     fi
 
@@ -36,12 +49,9 @@ function android_run() {
     
     echo "Resolved Package Name: $PACKAGE_NAME"
 
-    # 4. Install the APK
+    # 4. Install the APK (adb is smart; if it's already installed, this is incredibly fast)
     echo "Installing $PACKAGE_NAME..."
     adb install -r "$APK_PATH" || { echo "Installation failed!"; return 1; }
-
-    # Buffer for the OS to register the app
-    sleep 2
 
     # 5. Dynamically find the exact MainActivity path and Launch
     echo "Resolving launch intent..."
