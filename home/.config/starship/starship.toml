@@ -48,11 +48,13 @@ format = "[$path]($style) "
 truncation_length = 3
 
 [git_branch]
+disabled = true
 symbol = ""
 style = "fg:color_fg0"
 format = "on [$symbol $branch]($style)"
 
 [git_status]
+disabled = true
 style = "fg:color_fg0"
 format = "[[($all_status$ahead_behind)]($style) ]($style)"
 
@@ -60,32 +62,37 @@ format = "[[($all_status$ahead_behind)]($style) ]($style)"
 [kotlin]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
+
+[java]
+symbol = "☕ "
+style = "fg:color_fg0"
+format = "[$symbol($version )]($style)"
 
 [nodejs]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
 
 [rust]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
 
 [c]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
 
 [cpp]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
 
 [golang]
 symbol = " "
 style = "fg:color_fg0"
-format = "via [$symbol($version )]($style)"
+format = "[$symbol($version )]($style)"
 
 [docker_context]
 symbol = " "
@@ -100,9 +107,9 @@ disabled = false
 
 [character]
 disabled = false
-success_symbol = '[](bold fg:white)'
-error_symbol = '[](bold fg:red)'
-vimcmd_symbol = '[](bold fg:green)'
-vimcmd_replace_one_symbol = '[](bold fg:purple)'
-vimcmd_replace_symbol = '[](bold fg:purple)'
-vimcmd_visual_symbol = '[](bold fg:yellow)'
+success_symbol = ' [>](bold fg:white)'
+error_symbol = '[>](bold fg:red)'
+vimcmd_symbol = '[<](bold fg:green)'
+vimcmd_replace_one_symbol = '[<](bold fg:purple)'
+vimcmd_replace_symbol = '[<](bold fg:purple)'
+vimcmd_visual_symbol = '[<](bold fg:yellow)'
