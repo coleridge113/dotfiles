@@ -113,48 +113,32 @@ return {
             })
             vim.lsp.enable("ts_ls")
 
-            -- ------------------------------------------------
-            -- -- Kotlin
-            -- ------------------------------------------------
-            -- vim.lsp.config("kotlin_language_server", {
-            --     cmd = { "kotlin-language-server" },
-            --
-            --     root_dir = vim.fs.root(0, {
-            --         "settings.gradle",
-            --         "settings.gradle.kts",
-            --     }),
-            --
-            --     init_options = {
-            --         storagePath = vim.fn.stdpath("cache") .. "/kotlin-language-server",
-            --         indexLibraries = false,
-            --         enableScriptDependencies = true
-            --     },
-            --
-            --     settings = {
-            --         kotlin = {
-            --             excludeFolders = {
-            --                 ".git",
-            --                 ".idea",
-            --                 ".gradle",
-            --                 "**/.gradle",
-            --                 "build",
-            --                 "**/build",
-            --                 "**/generated",
-            --                 "**/intermediates",
-            --                 "**/.cxx",
-            --                 "**/tmp"
-            --             }
-            --         }
-            --     },
-            -- })
-            --
-            -- ------------------------------------------------
-            -- -- JDTLS
-            -- ------------------------------------------------
-            -- vim.lsp.config("jdtls", {
-            --     capabilities = capabilities,
-            --     on_attach = on_attach,
-            -- })
+            ------------------------------------------------
+            -- JetBrains Kotlin LSP
+            ------------------------------------------------
+            vim.lsp.config("jetbrains_kotlin_lsp", {
+                -- Explicitly set the name and binary command
+                name = "jetbrains_kotlin_lsp",
+                cmd = { "kotlin-lsp" },
+                capabilities = capabilities,
+                on_attach = on_attach,
+                
+                -- JetBrains LSP looks for a specific directory layout
+                root_dir = function(filename)
+                    return vim.fs.root(filename, { 
+                        "settings.gradle", 
+                        "settings.gradle.kts", 
+                        "build.gradle", 
+                        "build.gradle.kts", 
+                        "pom.xml", 
+                        ".git" 
+                    })
+                end,
+                
+                -- Force the server to attach to standard Kotlin files
+                filetypes = { "kotlin" },
+            })
+            vim.lsp.enable("jetbrains_kotlin_lsp")
         end,
     },
     -- Auto complete
@@ -354,7 +338,7 @@ return {
                 exclude = { 'markdown', 'help', 'text', 'rst' },
                 minlevel = 2,
             })
-            vim.cmd.highlight('IndentLine guifg=#404040') -- Add this line here
+            vim.cmd("highlight IndentLine guifg=#313244")
         end,
     },
     -- Markdown Render
