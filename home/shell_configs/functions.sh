@@ -248,3 +248,7 @@ function clean_build() {
 function wdb() {
     adb pair "192.168.100.74:$1"
 }
+
+function flush_lsp_log() {
+    echo > $HOME/.local/state/nvim/lsp.log
+}
