@@ -64,7 +64,7 @@ return {
 
             require("mason-lspconfig").setup({
                 -- 1. CHANGED: Use the official lspconfig name
-                ensure_installed = { "lua_ls", "kotlin_language_server" },
+                ensure_installed = { "lua_ls" },
             })
 
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -90,27 +90,6 @@ return {
                 on_attach = on_attach,
             })
             vim.lsp.enable("ts_ls")
-
-            ------------------------------------------------
-            -- Kotlin Language Server
-            ------------------------------------------------
-            vim.lsp.config("kotlin_language_server", {
-                capabilities = capabilities,
-                on_attach = on_attach,
-                
-                -- Force absolute path to the binary
-                cmd = { vim.fn.stdpath("data") .. "/mason/bin/kotlin-language-server" },
-                
-                filetypes = { "kotlin" },
-                
-                -- CRITICAL: Remove build.gradle to force the true project root
-                root_markers = { 
-                    "settings.gradle", 
-                    "settings.gradle.kts", 
-                    ".git" 
-                },
-            })
-            vim.lsp.enable("kotlin_language_server")
         end,
     },
     -- Auto complete
