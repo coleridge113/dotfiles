@@ -242,7 +242,20 @@ function copy() {
 }
 
 function clean_build() {
-    ./gradlew clean assembleDebug "$1"
+    echo "🚀 Starting Gradle build..."
+    
+    ./gradlew clean assembleDebug
+    
+    local status=$?
+    
+    if [ $status -eq 0 ]; then
+        echo -e "\n✅ Build completed successfully!"
+        notify-send "✅ Build completed successfully!" 
+    else
+        echo -e "\n❌ Build failed with exit code $status"
+        notify-send "❌ Build failed with exit code $status" 
+        return $status
+    fi
 }
 
 function wdb() {
