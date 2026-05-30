@@ -252,3 +252,7 @@ function wdb() {
 function flush_lsp_log() {
     echo > $HOME/.local/state/nvim/lsp.log
 }
+
+function live_log() {
+    tail -f "$1" | bat --paging=never -l log --unbuffered
+}

@@ -54,7 +54,7 @@ alias dots='cd ~/.dotfiles'
 alias leet='nvim leetcode.nvim'
 alias nvk='nvim ~/.config/karabiner'
 alias nvc='nvim ~/.config/caelestia'
-alias nvl='tail -f ~/.local/state/nvim/lsp.log | bat --paging=never -l log --unbuffered'
+alias nvl='live_log ~/.local/state/nvim/lsp.log'
 alias nvs='nvim ~/.config/starship.toml'
 
 # Git aliases
