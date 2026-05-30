@@ -1,27 +1,4 @@
 return {
-    -- Treesitter
-    {
-        "nvim-treesitter/nvim-treesitter",
-        version = false, -- Important: forces the latest main branch, avoiding old buggy releases
-        build = ":TSUpdate",
-        event = { "BufReadPost", "BufNewFile" },
-        config = function()
-            require("nvim-treesitter.config").setup({
-                ensure_installed = {
-                    "lua", "vim", "vimdoc", "query",
-                    "kotlin", "bash", "json", "yaml",
-                    "markdown", "markdown_inline",
-                    "javascript", "typescript", "tsx"
-                },
-                highlight = {
-                    enable = true,
-                },
-                indent = {
-                    enable = true, -- This is required for '=' to work on JSX/TSX
-                },
-            })
-        end,
-    },
     -- Git
     {
         "lewis6991/gitsigns.nvim",
@@ -117,20 +94,21 @@ return {
             ------------------------------------------------
             -- Kotlin Language Server
             ------------------------------------------------
-            -- 2 & 3. CHANGED: Match the lspconfig name so defaults are applied
             vim.lsp.config("kotlin_language_server", {
                 capabilities = capabilities,
                 on_attach = on_attach,
-                root_dir = function(filename)
-                    return vim.fs.root(filename, { 
-                        "settings.gradle", 
-                        "settings.gradle.kts", 
-                        "build.gradle", 
-                        "build.gradle.kts", 
-                        "pom.xml", 
-                        ".git" 
-                    })
-                end,
+                
+                -- Force absolute path to the binary
+                cmd = { vim.fn.stdpath("data") .. "/mason/bin/kotlin-language-server" },
+                
+                filetypes = { "kotlin" },
+                
+                -- CRITICAL: Remove build.gradle to force the true project root
+                root_markers = { 
+                    "settings.gradle", 
+                    "settings.gradle.kts", 
+                    ".git" 
+                },
             })
             vim.lsp.enable("kotlin_language_server")
         end,
@@ -339,7 +317,6 @@ return {
     {
         'MeanderingProgrammer/render-markdown.nvim',
         dependencies = {
-            'nvim-treesitter/nvim-treesitter',
             'echasnovski/mini.nvim'
         },
         config = function()
@@ -381,7 +358,6 @@ return {
     -- Leet code
     {
         "kawre/leetcode.nvim",
-        build = ":TSUpdate html", -- if you have `nvim-treesitter` installed
         dependencies = {
             -- include a picker of your choice, see picker section for more details
             "nvim-lua/plenary.nvim",
