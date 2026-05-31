@@ -250,10 +250,10 @@ function clean_build() {
     
     if [ $status -eq 0 ]; then
         echo -e "\n✅ Build completed successfully!"
-        notify-send "✅ Build completed successfully!" 
+        notify-send "Gradle Build" "✅ Build completed successfully!" 
     else
         echo -e "\n❌ Build failed with exit code $status"
-        notify-send "❌ Build failed with exit code $status" 
+        notify-send "Gradle Build" "❌ Build failed with exit code $status" 
         return $status
     fi
 }
