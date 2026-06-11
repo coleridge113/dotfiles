@@ -90,6 +90,16 @@ return {
                 on_attach = on_attach,
             })
             vim.lsp.enable("ts_ls")
+
+
+            ------------------------------------------------
+            -- C++
+            ------------------------------------------------
+            vim.lsp.config("clangd", {
+                capabilities = capabilities,
+                on_attach = on_attach
+            })
+
         end,
     },
     -- Auto complete
