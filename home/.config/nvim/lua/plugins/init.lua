@@ -447,25 +447,34 @@ return {
         cmd = { "ConformInfo" },
         keys = {
             {
-                -- Overrides your '=' key (or use a different shortcut like '<leader>f')
-                -- to use Prettier for formatting instead of Neovim's built-in engine
                 "<leader>f",
                 function()
-                    require("conform").format({ async = true, lsp_fallback = true })
+                    -- This forces conform to format the whole buffer 
+                    -- and respects the prettier config
+                    require("conform").format({ 
+                        async = true, 
+                        lsp_fallback = true,
+                        range = nil, -- Ensures it processes the whole file
+                    })
                 end,
-                mode = "v", -- Works in visual mode (highlighting)
-                desc = "Format selection with Prettier",
+                mode = { "n", "v" },
+                desc = "Format buffer with Prettier",
             },
         },
+        -- Use the 'opts' table OR 'config' function
         opts = {
+            log_level = vim.log.levels.DEBUG, -- Enable debug logs here
             formatters_by_ft = {
-                -- Tell Neovim to use Prettier for all JS/TS/React files
                 javascript = { "prettier" },
                 typescript = { "prettier" },
                 javascriptreact = { "prettier" },
                 typescriptreact = { "prettier" },
+                html = { "prettier" },
+                css = { "prettier" },
+                scss = { "prettier" },
+                less = { "prettier" },
             },
-        }
+        },
     },
     -- Mini AI
     {

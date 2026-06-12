@@ -48,6 +48,23 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
   end,
 })
 
+-- Prettier helper
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { "*.component.html" },
+    callback = function()
+        vim.bo.filetype = "html"
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "html", "css", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    callback = function()
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.tabstop = 2
+        vim.opt_local.expandtab = true
+    end,
+})
+
 -- LSP keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
