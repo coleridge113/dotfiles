@@ -269,3 +269,7 @@ function flush_lsp_log() {
 function live_log() {
     tail -f "$1" | bat --paging=never -l log --unbuffered
 }
+
+function removeClDelay() {
+    sudo hidutil property --set '{"CapsLockDelayOverride":0}'
+}
