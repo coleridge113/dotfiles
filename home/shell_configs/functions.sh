@@ -273,3 +273,9 @@ function live_log() {
 function removeClDelay() {
     sudo hidutil property --set '{"CapsLockDelayOverride":0}'
 }
+
+function c_compile_run() {
+    local output="${1:-main}"
+    g++ -std=c++23 *.cpp -o $output && ./$output
+}
+alias ccr="c_compile_run $1"
