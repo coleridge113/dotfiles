@@ -184,3 +184,9 @@ if [ -d "$DOT_HOME/.config/flameshot" ]; then
     ln -sfn "$DOT_HOME/.config/flameshot" "$HOME/.config/"
     echo "Linked flameshot"
 fi
+
+# Gemini / AGY
+if [ -d "$DOT_HOME/.gemini/" ]; then
+    ln -sfn "$DOT_HOME/.gemini/config/skills $HOME/.gemini/config/"
+    echo "Linked .gemini"
+fi
