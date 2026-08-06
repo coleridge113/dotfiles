@@ -19,6 +19,9 @@ nnoremap <leader>wk <C-w>k
 nnoremap <leader>wl <C-w>l
 nnoremap <leader>ww <C-w>w
 
+" Select all
+nnoremap <C-a> ggVG
+
 call plug#begin('~/.ideaivim/plugged')
 Plug 'tpope/vim-surround'
 call plug#end()
@@ -56,9 +59,6 @@ nnoremap <leader>5 :action GotoHarpoon5<CR>
 
 " Allow IdeaVim for dialogs
 set ideavimsupport+=dialog
-
-" Set quickscope
-set quickscope
 
 nmap s <Action>(flash.search)
 xmap s <Action>(flash.search)
