@@ -78,6 +78,12 @@ return {
                 client.server_capabilities.semanticTokensProvider = nil
             end
 
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "java",
+                callback = function()
+                    vim.opt_local.cinoptions:append("(1s,m1")
+                end,
+            })
             ------------------------------------------------
             -- Lua
             ------------------------------------------------
@@ -101,6 +107,14 @@ return {
             -- C++
             ------------------------------------------------
             vim.lsp.config("clangd", {
+                capabilities = capabilities,
+                on_attach = on_attach
+            })
+
+            ------------------------------------------------
+            -- Java
+            ------------------------------------------------
+            vim.lsp.config("jdtls", {
                 capabilities = capabilities,
                 on_attach = on_attach
             })
