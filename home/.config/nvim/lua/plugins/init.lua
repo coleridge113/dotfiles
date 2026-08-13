@@ -35,6 +35,11 @@ return {
                 defaults = {
                     path_display = { "smart" },
                     mappings = { i = { ["<esc>"] = require("telescope.actions").close } },
+                    -- Added patterns to ignore node_modules and .git
+                    file_ignore_patterns = {
+                        "node_modules/.*",
+                        "%.git/.*",
+                    },
                 },
                 pickers = {
                     find_files = {
