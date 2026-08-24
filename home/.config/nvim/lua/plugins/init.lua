@@ -84,6 +84,25 @@ return {
                     vim.opt_local.cinoptions:append("(1s,m1")
                 end,
             })
+            -- Handle JDTLS class files (jdt:// URIs) when running 'gd'
+            vim.api.nvim_create_autocmd("BufReadCmd", {
+                pattern = "jdt://*",
+                callback = function(opt)
+                    local client = vim.lsp.get_clients({ name = "jdtls" })[1]
+                    if not client then
+                        return
+                    end
+
+                    -- Request class file contents synchronously so lines exist before cursor jump
+                    local result = client.request_sync("java/classFileContents", { uri = opt.match }, 3000, 0)
+                    if result and result.result then
+                        local lines = vim.split(result.result, "\n")
+                        vim.api.nvim_buf_set_lines(opt.buf, 0, -1, false, lines)
+                        vim.bo[opt.buf].modifiable = false
+                        vim.bo[opt.buf].filetype = "java"
+                    end
+                end,
+            })
             ------------------------------------------------
             -- Lua
             ------------------------------------------------
@@ -112,12 +131,40 @@ return {
             })
 
             ------------------------------------------------
-            -- Java
+            -- Java (jdtls)
             ------------------------------------------------
-            vim.lsp.config("jdtls", {
-                capabilities = capabilities,
-                on_attach = on_attach
+            local jdtls_extended_caps = vim.tbl_deep_extend("force", capabilities, {
+                textDocument = {
+                    codeAction = {
+                        dynamicRegistration = true,
+                    },
+                },
             })
+
+            vim.lsp.config("jdtls", {
+                capabilities = jdtls_extended_caps,
+                on_attach = on_attach,
+                init_options = {
+                    -- Enables decompilation & source downloading from .m2
+                    extendedClientCapabilities = {
+                        progressReportProvider = true,
+                        classFileContentsSupport = true,
+                        generateToStringPromptSupport = true,
+                        hashCodeEqualsPromptSupport = true,
+                        advancedOrganizeImportsSupport = true,
+                        resolveAdditionalTextEditsSupport = true,
+                    },
+                },
+                settings = {
+                    java = {
+                        -- Decompile class files using Fernflower when source JARs aren't present
+                        contentProvider = { preferred = "fernflower" },
+                        autobuild = { enabled = true },
+                        downloadSources = true,
+                    },
+                },
+            })
+            vim.lsp.enable("jdtls")
 
         end,
     },
