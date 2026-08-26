@@ -68,7 +68,6 @@ return {
             require("mason").setup()
 
             require("mason-lspconfig").setup({
-                -- 1. CHANGED: Use the official lspconfig name
                 ensure_installed = { "lua_ls" },
             })
 
@@ -84,6 +83,7 @@ return {
                     vim.opt_local.cinoptions:append("(1s,m1")
                 end,
             })
+            
             -- Handle JDTLS class files (jdt:// URIs) when running 'gd'
             vim.api.nvim_create_autocmd("BufReadCmd", {
                 pattern = "jdt://*",
@@ -103,6 +103,7 @@ return {
                     end
                 end,
             })
+            
             ------------------------------------------------
             -- Lua
             ------------------------------------------------
@@ -121,7 +122,6 @@ return {
             })
             vim.lsp.enable("ts_ls")
 
-
             ------------------------------------------------
             -- C++
             ------------------------------------------------
@@ -131,7 +131,7 @@ return {
             })
 
             ------------------------------------------------
-            -- Java (jdtls)
+            -- Java (jdtls) - Native Neovim 0.12 Config
             ------------------------------------------------
             local jdtls_extended_caps = vim.tbl_deep_extend("force", capabilities, {
                 textDocument = {
@@ -141,11 +141,34 @@ return {
                 },
             })
 
+            local lombok_path = vim.fn.stdpath("data") .. "/mason/packages/jdtls/lombok.jar"
+            local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+            local workspace_dir = vim.fn.stdpath("data") .. "/site/java/workspace-root/" .. project_name
+
             vim.lsp.config("jdtls", {
+                cmd = {
+                    "jdtls",
+                    "-data", workspace_dir,
+                    "--jvm-arg=-javaagent:" .. lombok_path,
+                },
+                -- Native 0.12 root markers array (Maven + Gradle)
+                root_markers = {
+                    "pom.xml",
+                    "build.gradle",
+                    "build.gradle.kts",
+                    "settings.gradle",
+                    "settings.gradle.kts",
+                    "mvnw",
+                    "gradlew",
+                    ".git"
+                },
                 capabilities = jdtls_extended_caps,
-                on_attach = on_attach,
+                on_attach = function(client, bufnr)
+                    on_attach(client, bufnr)
+                    -- Native LSP definition binding
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to Definition" })
+                end,
                 init_options = {
-                    -- Enables decompilation & source downloading from .m2
                     extendedClientCapabilities = {
                         progressReportProvider = true,
                         classFileContentsSupport = true,
@@ -157,13 +180,14 @@ return {
                 },
                 settings = {
                     java = {
-                        -- Decompile class files using Fernflower when source JARs aren't present
                         contentProvider = { preferred = "fernflower" },
                         autobuild = { enabled = true },
                         downloadSources = true,
                     },
                 },
             })
+
+            -- Explicitly enable for Java filetype in Neovim 0.12
             vim.lsp.enable("jdtls")
 
         end,
