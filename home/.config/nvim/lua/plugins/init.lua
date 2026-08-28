@@ -68,7 +68,8 @@ return {
             require("mason").setup()
 
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls" },
+                -- Added kotlin_language_server here so Mason auto-installs it
+                ensure_installed = { "lua_ls", "kotlin_language_server" },
             })
 
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -83,7 +84,7 @@ return {
                     vim.opt_local.cinoptions:append("(1s,m1")
                 end,
             })
-            
+
             -- Handle JDTLS class files (jdt:// URIs) when running 'gd'
             vim.api.nvim_create_autocmd("BufReadCmd", {
                 pattern = "jdt://*",
@@ -103,7 +104,7 @@ return {
                     end
                 end,
             })
-            
+
             ------------------------------------------------
             -- Lua
             ------------------------------------------------
@@ -129,7 +130,38 @@ return {
                 capabilities = capabilities,
                 on_attach = on_attach
             })
+            vim.lsp.enable("clangd")
 
+            ------------------------------------------------
+            -- Kotlin
+            ------------------------------------------------
+            vim.lsp.config("kotlin_language_server", {
+                capabilities = capabilities,
+                on_attach = on_attach,
+                init_options = {
+                    storagePath = vim.fn.resolve(vim.fn.stdpath("cache") .. "/kotlin_language_server"),
+                },
+                root_dir = function(bufnr, on_dir)
+                    local path = vim.api.nvim_buf_get_name(bufnr)
+
+                    if not path or path == "" then
+                        on_dir(vim.fn.getcwd())
+                        return
+                    end
+
+                    local root = vim.fs.root(path, {
+                        "settings.gradle",
+                        "settings.gradle.kts",
+                        "build.gradle",
+                        "build.gradle.kts",
+                        "pom.xml",
+                        ".git",
+                    })
+
+                    on_dir(root or vim.fs.dirname(path))
+                end,
+            })
+            vim.lsp.enable("kotlin_language_server")
             ------------------------------------------------
             -- Java (jdtls) - Native Neovim 0.12 Config
             ------------------------------------------------
