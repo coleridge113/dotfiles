@@ -135,6 +135,9 @@ return {
             ------------------------------------------------
             local jdtls_extended_caps = vim.tbl_deep_extend("force", capabilities, {
                 textDocument = {
+                    definition = {
+                        dynamicRegistration = true,
+                    },
                     codeAction = {
                         dynamicRegistration = true,
                     },
@@ -149,25 +152,22 @@ return {
                 cmd = {
                     "jdtls",
                     "-data", workspace_dir,
+                    "--jvm-arg=-Xmx2G", -- 1. ADD THIS: Give jdtls 2GB of RAM for Fineract
                     "--jvm-arg=-javaagent:" .. lombok_path,
                 },
-                -- Native 0.12 root markers array (Maven + Gradle)
+                -- 2. CHANGED: Only look for root-level markers so it doesn't get trapped in submodules
                 root_markers = {
-                    "pom.xml",
-                    "build.gradle",
-                    "build.gradle.kts",
-                    "settings.gradle",
-                    "settings.gradle.kts",
-                    "mvnw",
                     "gradlew",
+                    "mvnw",
                     ".git"
                 },
                 capabilities = jdtls_extended_caps,
                 on_attach = function(client, bufnr)
-                    on_attach(client, bufnr)
-                    -- Native LSP definition binding
+                    client.server_capabilities.definitionProvider = true
+                    if on_attach then on_attach(client, bufnr) end
                     vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to Definition" })
                 end,
+                -- ... rest of your init_options and settings
                 init_options = {
                     extendedClientCapabilities = {
                         progressReportProvider = true,
@@ -187,7 +187,6 @@ return {
                 },
             })
 
-            -- Explicitly enable for Java filetype in Neovim 0.12
             vim.lsp.enable("jdtls")
 
         end,
