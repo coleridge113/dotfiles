@@ -279,3 +279,37 @@ function c_compile_run() {
     g++ -std=c++23 *.cpp -o $output && ./$output
 }
 alias ccr="c_compile_run $1"
+
+function kotlin_compile_run() {
+    # 1. Ensure kotlinc is installed
+    if ! command -v kotlinc &> /dev/null; then
+        echo "Error: 'kotlinc' is not installed or not in your PATH."
+        return 1
+    fi
+
+    # 2. Check if any .kt files exist in the current directory
+    if ! ls *.kt &> /dev/null; then
+        echo "Error: No .kt files found in $(pwd)"
+        return 1
+    fi
+
+    # 3. Create a temporary file for the compiled output
+    local jar_file
+    jar_file=$(mktemp /tmp/kt_app_XXXXXX.jar)
+
+    # 4. Compile all .kt files in the current folder
+    echo "Compiling..."
+    if kotlinc *.kt -include-runtime -d "$jar_file"; then
+        echo -e "Compilation successful.\n--- Output ---"
+        # 5. Run the compiled JAR
+        java -jar "$jar_file" "$@"
+
+        # 6. Clean up the temp file after execution
+        rm -f "$jar_file"
+    else
+        echo "Compilation failed."
+        rm -f "$jar_file"
+        return 1
+    fi
+}
+alias kcr="kotlin_compile_run"
