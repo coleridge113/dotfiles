@@ -1,0 +1,10 @@
+android-studio
+brave-bin
+caelestia-meta
+google-chrome
+ngrok
+overskride
+postman-bin
+r8168-dkms
+spotify
+yay
