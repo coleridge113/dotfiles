@@ -4,10 +4,13 @@ DOT_HOME="$HOME/.dotfiles/home"
 CONFIG_DIR="$DOT_HOME/shell_configs"
 BASHRC="$HOME/.bashrc"
 ZSHRC="$HOME/.zshrc"
+
 SOURCE_BLOCK="if [ -d \"$CONFIG_DIR\" ]; then
-for file in \"$CONFIG_DIR/*.sh; do
-    [ -r \"\$file\" ] && source \"\$file\"
-done
+    shopt -s nullglob 2>/dev/null
+    for file in $CONFIG_DIR/*.sh; do
+        [ -r \"\$file\" ] && source \"\$file\"
+    done
+    shopt -u nullglob 2>/dev/null
 fi"
 
 OS="$(uname)"
