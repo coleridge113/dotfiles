@@ -40,8 +40,25 @@
         "enabled": true,
         "showPerformance": true
     },
+    "general": {
+        "idle": {
+            "timeouts": [
+                {
+                    "idleAction": "lock",
+                    "inhibitWhenAudio": false,
+                    "inhibitWhenCharging": false,
+                    "respectInhibitors": true,
+                    "timeout": 180
+                }
+            ]
+        }
+    },
     "launcher": {
         "showOnHover": true,
         "vimKeybinds": true
+    },
+    "services": {
+        "useFahrenheit": false,
+        "useTwelveHourClock": false
     }
 }
