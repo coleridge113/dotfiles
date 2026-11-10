@@ -313,3 +313,29 @@ function kotlin_compile_run() {
     fi
 }
 alias kcr="kotlin_compile_run"
+
+export SNOW_DIR="$HOME/dev/snow"
+function pdi_login() {
+    local env_file="$SNOW_DIR/snow-dev/.env"
+
+    if [[ ! -f "$env_file" ]]; then
+        echo "Error: .env file not found at $env_file" >&2
+        return 1
+    fi
+
+    local raw_user raw_pass
+    {
+        read -r raw_user
+        read -r raw_pass
+    } < "$env_file"
+
+    # Strip everything up to the first colon, strip leading spaces, and remove carriage returns
+    local user="${${raw_user#*:}# }"
+    user="${user%$'\r'}"
+
+    local password="${${raw_pass#*:}# }"
+    password="${password%$'\r'}"
+
+    echo "user: $user"
+    echo "password: $password"
+}
