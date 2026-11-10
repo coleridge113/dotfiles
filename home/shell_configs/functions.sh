@@ -323,19 +323,39 @@ function pdi_login() {
         return 1
     fi
 
-    local raw_user raw_pass
+    local raw_user raw_pass raw_instance
     {
         read -r raw_user
         read -r raw_pass
+        read -r raw_instance
     } < "$env_file"
 
-    # Strip everything up to the first colon, strip leading spaces, and remove carriage returns
     local user="${${raw_user#*:}# }"
     user="${user%$'\r'}"
 
     local password="${${raw_pass#*:}# }"
     password="${password%$'\r'}"
 
-    echo "user: $user"
-    echo "password: $password"
+    local instance="${${raw_instance#*:}# }"
+    instance="${instance%$'\r'}"
+
+    # Use expect to handle interactive terminal prompts cleanly
+    expect -c "
+        set timeout 10
+        spawn now-sdk auth --add \"$instance\"
+
+        expect \"Type of authentication to use\"
+        send \"2\r\"
+
+        expect \"Alias for these credentials\"
+        send \"pdi\r\"
+
+        expect \"username\"
+        send \"$user\r\"
+
+        expect \"password\"
+        send \"$password\r\"
+
+        expect eof
+    "
 }
