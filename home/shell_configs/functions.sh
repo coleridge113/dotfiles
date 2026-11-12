@@ -316,8 +316,14 @@ alias kcr="kotlin_compile_run"
 
 export SNOW_DIR="$HOME/dev/snow"
 function pdi_login() {
-    local env_file="$SNOW_DIR/snow-dev/.env"
+    local auth_type="${1:-basic}"
 
+    if [[ "$auth_type" != "basic" && "$auth_type" != "oauth" ]]; then
+        echo "Error: Invalid auth type '$auth_type'. Supported types: basic, oauth" >&2
+        return 1
+    fi
+
+    local env_file="$SNOW_DIR/snow-dev/.env"
     if [[ ! -f "$env_file" ]]; then
         echo "Error: .env file not found at $env_file" >&2
         return 1
@@ -332,30 +338,43 @@ function pdi_login() {
 
     local user="${${raw_user#*:}# }"
     user="${user%$'\r'}"
-
     local password="${${raw_pass#*:}# }"
     password="${password%$'\r'}"
-
     local instance="${${raw_instance#*:}# }"
     instance="${instance%$'\r'}"
 
-    # Use expect to handle interactive terminal prompts cleanly
-    expect -c "
-        set timeout 10
-        spawn now-sdk auth --add \"$instance\"
+    # Your custom OAuth Client ID created on acnnademo8
+    local custom_client_id="e460880f749a438288e678a228d0d762"
 
-        expect \"Type of authentication to use\"
-        send \"2\r\"
+    echo "Authenticating via $auth_type to $instance..."
 
-        expect \"Alias for these credentials\"
-        send \"pdi\r\"
+    if [[ "$auth_type" == "basic" ]]; then
+        NODE_TLS_REJECT_UNAUTHORIZED=0 expect -c "
+            set timeout 20
+            spawn env NODE_TLS_REJECT_UNAUTHORIZED=0 now-sdk auth --add \"$instance\" --type basic --alias pdi
 
-        expect \"username\"
-        send \"$user\r\"
+            expect \"username\"
+            send \"$user\r\"
 
-        expect \"password\"
-        send \"$password\r\"
+            expect \"password\"
+            send \"$password\r\"
 
-        expect eof
-    "
+            expect {
+                \"Enter MFA code\" { interact }
+                eof
+            }
+        "
+    else
+        now-sdk auth --delete pdi 2>/dev/null
+
+        NODE_TLS_REJECT_UNAUTHORIZED=0 NOW_SDK_OAUTH_CLIENT_ID="$custom_client_id" expect -c "
+            set timeout 60
+            spawn env NODE_TLS_REJECT_UNAUTHORIZED=0 NOW_SDK_OAUTH_CLIENT_ID=\"$custom_client_id\" now-sdk auth --add \"$instance\" --type oauth --alias pdi
+
+            expect {
+                \"Copy the code from the browser\" { interact }
+                eof
+            }
+        "
+    fi
 }
