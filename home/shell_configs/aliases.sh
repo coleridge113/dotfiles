@@ -39,6 +39,8 @@ alias spotify='app "Spotify" spotify'
 alias steam='app "Steam" steam'
 alias bitwarden='app "Bitwarden" bitwarden'
 alias naut='app "Nautilus" nautilus'
+alias claude_work="CLAUDE_CONFIG_DIR_HOME=$HOME/.claude command claude"
+alias claude_personal="CLAUDE_CONFIG_DIR_HOME=$HOME/.claude-personal command claude"
 
 # Vim aliases
 alias nv='cd ~/.config/nvim'

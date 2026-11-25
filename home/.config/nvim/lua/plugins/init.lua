@@ -410,6 +410,31 @@ return {
             })
         end,
     },
+    -- Treesitter (main branch: parsers + highlighting; required so indentmini/ufo
+    -- find a parser instead of re-searching runtimepath on every redraw)
+    {
+        "nvim-treesitter/nvim-treesitter",
+        branch = "main",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            local parsers = {
+                "typescript", "tsx", "javascript", "java", "kotlin", "cpp", "c",
+                "html", "css", "scss", "json", "lua", "markdown", "markdown_inline",
+                "bash", "yaml", "vim", "vimdoc", "query",
+            }
+            require("nvim-treesitter").install(parsers)
+
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(args)
+                    local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+                    if lang and pcall(vim.treesitter.start, args.buf, lang) then
+                        vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                    end
+                end,
+            })
+        end,
+    },
     -- Indent
     {
         'https://github.com/nvimdev/indentmini.nvim',
